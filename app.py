@@ -24,7 +24,7 @@ def home():
     return threads
 
 def clean_status(status):
-    return {k: status[k] for k in {'content', 'created_at', 'url'}}
+    return {k: status[k] for k in {'content', 'created_at', 'url', 'media_attachments', 'card'}}
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
