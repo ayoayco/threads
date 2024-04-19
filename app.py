@@ -22,10 +22,7 @@ def home():
     return threads
 
 def clean_status(status):
-    clean = {}
-    clean['content'] = status['content']
-    clean['created_at'] = status['created_at']
-    clean['url'] = status['url']
+    clean = {k: status[k] for k in {'content', 'created_at', 'url'}}
     if 'descendants' in status:
         descendants = status['descendants']
         clean['descendants_count'] = len(descendants)
