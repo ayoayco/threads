@@ -42,8 +42,6 @@ Show off your favorite public threads!
 
     > Note: On a Mac, the default port 5000 is used by AirDrop & Handoff; you may have to turn those off
 
-4. Populate a `dist` directory with static files (e.g., `*.html` for pages). Currently I generate static files in a separate [Astro site project](https://ayco.io/sh/ayco.io-astro) -- see instructions on how to set it up separately, run the build script and copy the `dist` here.
-
 4. After development session, deactivate the python env
     ```bash
     (.venv)$ deactivate
