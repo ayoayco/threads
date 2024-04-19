@@ -4,7 +4,7 @@ from flask import Flask
 app = Flask(__name__)
 
 server = 'https://social.ayco.io'
-thread_ids = ['112294405672971916']
+thread_ids = ['112294405672971916', '112258065967208438']
 
 @app.route('/')
 def home():
