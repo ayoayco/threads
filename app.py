@@ -17,17 +17,13 @@ def home():
         for reply in context['descendants']:
             if reply['account']['acct'] == author:
                 descendants.append(clean_status(reply))
+        status = clean_status(status)
         status['descendants'] = descendants
-        threads.append(clean_status(status))
+        threads.append(status)
     return threads
 
 def clean_status(status):
-    clean = {k: status[k] for k in {'content', 'created_at', 'url'}}
-    if 'descendants' in status:
-        descendants = status['descendants']
-        clean['descendants_count'] = len(descendants)
-        clean['descendants'] = descendants
-    return clean
+    return {k: status[k] for k in {'content', 'created_at', 'url'}}
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
