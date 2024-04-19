@@ -18,10 +18,10 @@ Show off your favorite public threads!
 
     ```bash
     # clone the project 
-    $ git clone git@git.sr.ht:~ayoayco/ayco.io-flask
+    $ git clone git@git.sr.ht:~ayoayco/threads
 
     # go into the project directory
-    $ cd ayco.io-flask
+    $ cd threads
 
     # create python environment:
     $ python3 -m venv .venv
