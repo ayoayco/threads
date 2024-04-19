@@ -11,14 +11,15 @@ def home():
     threads = []
     for id in thread_ids:
         status = requests.get(server + '/api/v1/statuses/' + id ).json()
-        author = status['account']['acct']
+        author = status['account']['id']
         context = requests.get(server + '/api/v1/statuses/' + id + '/context').json()
         descendants = []
         for reply in context['descendants']:
-            if reply['account']['acct'] == author:
+            if reply['account']['id'] == author and reply['in_reply_to_account_id'] == author:
                 descendants.append(clean_status(reply))
         status = clean_status(status)
         status['descendants'] = descendants
+        status['descendants_count'] = len(descendants)
         threads.append(status)
     return threads
 
