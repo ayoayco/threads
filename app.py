@@ -19,7 +19,6 @@ def home():
                 descendants.append(clean_status(reply))
         status = clean_status(status)
         status['descendants'] = descendants
-        status['descendants_count'] = len(descendants)
         threads.append(status)
     return threads
 
