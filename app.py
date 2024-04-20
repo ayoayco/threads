@@ -16,9 +16,6 @@ def home():
         threads.append(status)
     return threads
 
-def clean_status(status):
-    return {k: status[k] for k in ['id', 'account', 'content', 'created_at', 'url', 'media_attachments', 'card']}
-
 def get_descendants(server, status):
     author_id = status['account']['id']
     context = requests.get(server + '/api/v1/statuses/' + status['id'] + '/context').json()
@@ -28,6 +25,16 @@ def get_descendants(server, status):
             descendants.append(clean_status(reply))
     return descendants
 
+def clean_author(account):
+    return clean_dict(account, ['avatar', 'display_name', 'id'])
+
+def clean_status(status):
+    clean = clean_dict(status, ['id', 'content', 'created_at', 'url', 'media_attachments', 'card'])
+    clean['account'] = clean_author(status['account'])
+    return clean
+
+def clean_dict(dict, keys):
+    return {k: dict[k] for k in keys}
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
