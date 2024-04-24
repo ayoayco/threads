@@ -44,7 +44,7 @@
       & * {
         margin-top: 1em;
       }
-      & img {
+      & img, & video {
         border-radius: 5px;
         max-width: 100%;
         height: 300px;
@@ -72,7 +72,7 @@
               {% if media.type == 'image'%}
               <img src="{{media.url}}" />
               {% elif media.type == 'gifv' %}
-              <video controls autoplay>
+              <video autoplay loop>
                 <source src="{{media.url}}" type="video/mp4">
                 Your browser does not support the video tag.
               </video> 
@@ -93,7 +93,7 @@
                     {% if media.type == 'image'%}
                     <img src="{{media.url}}" />
                     {% elif media.type == 'gifv' %}
-                    <video controls autoplay>
+                    <video autoplay loop>
                       <source src="{{media.url}}" type="video/mp4">
                       Your browser does not support the video tag.
                     </video> 
