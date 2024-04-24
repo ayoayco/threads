@@ -44,8 +44,8 @@
 
     .card_content {
 
-      & *:not(.meta) {
-        margin-bottom: 1em;
+      & *:not(.meta, .descendant *) {
+        margin-top: 1em;
       }
 
       & img, & video {
@@ -108,7 +108,7 @@
               <summary>See more</summary>
               <ul>
                 {% for descendant in thread.descendants %}
-                <li class="card">
+                <li class="card descendant">
                   <div class="card_avatar">
                     {% if descendant.account.avatar is defined %}
                     <img class="avatar" src="{{thread.account.avatar}}" />
