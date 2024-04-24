@@ -39,9 +39,9 @@
     }
 
     .card_content {
-      width
-      & * {
-        margin-top: 1em;
+
+      & *:not(.meta) {
+        margin-bottom: 1em;
       }
 
       & img, & video {
@@ -52,7 +52,7 @@
 
       & .meta {
         font-size: small; color: #888;
-
+        margin-bottom: 5px;
       }
     }
 
@@ -104,10 +104,17 @@
               <ul>
                 {% for descendant in thread.descendants %}
                 <li class="card">
-                  <div class="card_meta">
-                    <span>{{ descendant.created_at }}</span> &bullet; <a href="{{descendant.url}}" target="_blank">&nearr;</a>
+                  <div class="card_avatar">
+                    {% if descendant.account.avatar is defined %}
+                    <img class="avatar" src="{{thread.account.avatar}}" />
+                    {% endif %}
                   </div>
+
                   <div class="card_content">
+                    <div class="meta">
+                      <span>{{ descendant.created_at }}</span> &bullet; <a href="{{descendant.url}}" target="_blank">&nearr;</a>
+                    </div>
+
                     {{ descendant.content | safe }}
                     {% for media in descendant.media_attachments%}
                       {% if media.type == 'image'%}
