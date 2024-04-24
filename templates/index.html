@@ -4,25 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayo's Threads</title>
+    <link rel="stylesheet" href="https://webcomponent.io/reset.css" />
     <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 570px;
+      margin: 0 auto;
+      padding: 1em;
+    }
+    header {
+      background: linear-gradient(45deg, #3054bf, #416fff);
+      color: white;
+      width: 100%;
+      padding: 1em;
+      border-radius: 5px;
+    }
+    summary {
+      cursor: pointer;
+      margin-top: 1em;
+    }
     ul {
       list-style: none;
     }
     .card {
       display:block;
       margin-left: -40px;
-      margin-bottom: 15px;
+      margin-top: 1em;
       border: 1px solid rgba(34, 34, 34, 0.15);
       border-radius: 5px;
       padding:1em;
-      max-width: 500px;
       background-color: #fff;
       box-shadow: 5px 25px 10px -25px rgba(34, 34, 34, 0.15);
     }
     .card_meta {
       font-size: small; color: #888;
     }
+
     .card_content {
+      & * {
+        margin-top: 1em;
+      }
       & img {
         border-radius: 5px;
         max-width: 100%;
@@ -33,45 +54,49 @@
     </style>
   </head>
   <body>
-    <h1>Ayo's Threads</h1>
-    <p>Total: {{threads | length}}</p>
-    <ul>
-      {% for thread in threads %}
-      <li class="card">
-        <div class="card_meta">
-          <span>{{ thread.created_at }}</span> &bullet; <a href="{{thread.url}}" target="_blank">&nearr;</a>
-        </div>
-        <div class="card_content">
-          {{thread.content | safe}} 
+    <header>
+      <h1>Ayo's Threads</h1>
+      <p>Total: {{threads | length}}</p>
+    </header>
+    <main>
+      <ul>
+        {% for thread in threads %}
+        <li class="card">
+          <div class="card_meta">
+            <span>{{ thread.created_at }}</span> &#8729; <a href="{{thread.url}}" target="_blank">&nearr;</a>
+          </div>
+          <div class="card_content">
+            {{thread.content | safe}} 
 
-          {% for media in thread.media_attachments%}
-            {% if media.type == 'image'%}
-            <img src="{{media.url}}" />
-            {% endif %}
-          {% endfor %}
-        </div>
-        <details>
-          <summary style="cursor:pointer">See more</summary>
-          <ul>
-            {% for descendant in thread.descendants %}
-            <li class="card">
-              <div class="card_meta">
-                <span>{{ descendant.created_at }}</span> &bullet; <a href="{{descendant.url}}" target="_blank">&nearr;</a>
-              </div>
-              <div class="card_content">
-                {{ descendant.content | safe }}
-                {% for media in descendant.media_attachments%}
-                  {% if media.type == 'image'%}
-                  <img src="{{media.url}}" />
-                  {% endif %}
-                {% endfor %}
-              </div>
-            <li>
+            {% for media in thread.media_attachments%}
+              {% if media.type == 'image'%}
+              <img src="{{media.url}}" />
+              {% endif %}
             {% endfor %}
-          </ul>
-        </details>
-      </li>
-      {% endfor %}
-    </ul>
+          </div>
+          <details>
+            <summary>See more</summary>
+            <ul>
+              {% for descendant in thread.descendants %}
+              <li class="card">
+                <div class="card_meta">
+                  <span>{{ descendant.created_at }}</span> &bullet; <a href="{{descendant.url}}" target="_blank">&nearr;</a>
+                </div>
+                <div class="card_content">
+                  {{ descendant.content | safe }}
+                  {% for media in descendant.media_attachments%}
+                    {% if media.type == 'image'%}
+                    <img src="{{media.url}}" />
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              <li>
+              {% endfor %}
+            </ul>
+          </details>
+        </li>
+        {% endfor %}
+      </ul>
+    </main>
   </body>
 </html>
