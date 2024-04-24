@@ -5,7 +5,7 @@ import requests
 threads = Blueprint('threads', __name__, template_folder='template')
 
 server = 'https://social.ayco.io'
-thread_ids = ['112319729193615365', '112294405672971916', '112258065967208438']
+thread_ids = ['112319729193615365', '112258065967208438']
 
 @threads.route('/')
 def home():
