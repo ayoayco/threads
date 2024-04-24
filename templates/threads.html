@@ -49,6 +49,14 @@
 
     .card_content {
 
+      & .invisible {
+        display: none;
+      }
+
+      & .ellipsis::after {
+        content: '...'
+      }
+
       & *:not(.meta, .descendant *) {
         margin-bottom: 1em;
       }
@@ -80,7 +88,7 @@
       display: inline;
       width: 50px;
     }
-    
+
     </style>
   </head>
   <body>
