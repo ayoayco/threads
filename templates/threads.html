@@ -22,7 +22,11 @@
         color: white;
       }
     }
+    summary:hover {
+      text-decoration: underline;
+    }
     summary {
+      color: blue;
       cursor: pointer;
       margin-top: 1em;
     }
@@ -105,7 +109,7 @@
             {% endfor %}
 
             <details>
-              <summary>See more</summary>
+              <summary>See more ({{ thread.descendants | length }})</summary>
               <ul>
                 {% for descendant in thread.descendants %}
                 <li class="card descendant">
