@@ -10,7 +10,7 @@ thread_ids = ['112319729193615365', '112294405672971916', '112258065967208438']
 @threads.route('/')
 def home():
     threads = fetch_threads();
-    return render_template('index.html', threads=threads)
+    return render_template('threads.html', threads=threads)
 
 @threads.route('/api')
 def api():
