@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayo's Threads</title>
+    <style>
+    ul {
+      list-style: none;
+    }
+    .card {
+      display:block;
+      margin-left: -40px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(34, 34, 34, 0.15);
+      border-radius: 5px;
+      padding:1em;
+      max-width: 500px;
+      background-color: #fff;
+      box-shadow: 5px 25px 10px -25px rgba(34, 34, 34, 0.15);
+    }
+    .card_meta {
+      font-size: small; color: #888;
+    }
+    .card_content {
+      & img {
+        border-radius: 5px;
+        max-width: 100%;
+        height: 300px;
+        object-fit: cover;
+      }
+    }
+    </style>
+  </head>
+  <body>
+    <h1>Ayo's Threads</h1>
+    <p>Total: {{threads | length}}</p>
+    <ul>
+      {% for thread in threads %}
+      <li class="card">
+        <div class="card_meta">
+          <span>{{ thread.created_at }}</span> &bullet; <a href="{{thread.url}}" target="_blank">&nearr;</a>
+        </div>
+        <div class="card_content">
+          {{thread.content | safe}} 
+
+          {% for media in thread.media_attachments%}
+            {% if media.type == 'image'%}
+            <img src="{{media.url}}" />
+            {% endif %}
+          {% endfor %}
+        </div>
+        <details>
+          <summary style="cursor:pointer">See more</summary>
+          <ul>
+            {% for descendant in thread.descendants %}
+            <li class="card">
+              <div class="card_meta">
+                <span>{{ descendant.created_at }}</span> &bullet; <a href="{{descendant.url}}" target="_blank">&nearr;</a>
+              </div>
+              <div class="card_content">
+                {{ descendant.content | safe }}
+                {% for media in descendant.media_attachments%}
+                  {% if media.type == 'image'%}
+                  <img src="{{media.url}}" />
+                  {% endif %}
+                {% endfor %}
+              </div>
+            <li>
+            {% endfor %}
+          </ul>
+        </details>
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

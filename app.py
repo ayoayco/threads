@@ -1,5 +1,5 @@
+from flask import Flask, render_template
 import requests
-from flask import Flask
 
 app = Flask(__name__)
 
@@ -8,6 +8,15 @@ thread_ids = ['112294405672971916', '112258065967208438']
 
 @app.route('/')
 def home():
+    threads = fetch_threads();
+    return render_template('index.html', threads=threads)
+
+@app.route('/api')
+def api():
+    threads = fetch_threads();
+    return threads;
+
+def fetch_threads():
     threads = []
     for id in thread_ids:
         status = requests.get(server + '/api/v1/statuses/' + id ).json()
