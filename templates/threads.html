@@ -11,14 +11,13 @@
       max-width: 570px;
       margin: 0 auto;
       color: #232323;
+      padding: 5px;
     }
     header, footer {
       background: linear-gradient(45deg, #3054bf, #416fff);
-      color: white;
       padding: 1em;
+      color: white;
       border-radius: 5px;
-      margin: 1em 0;
-
       & a {
         color: white;
       }
@@ -34,14 +33,14 @@
     ul {
       list-style: none;
     }
+    .card.descendant {
+      padding-bottom: 1em;
+    }
     .card {
+      border-bottom: 1px solid rgba(34, 34, 34, 0.15);
       margin-left: -40px;
       margin-top: 1em;
-      border: 1px solid rgba(34, 34, 34, 0.35);
-      border-radius: 5px;
-      padding:1em;
       background-color: #fff;
-      box-shadow: 5px 25px 10px -25px rgba(34, 34, 34, 0.15);
       display: grid;
       grid-template-columns: 55px auto;
       gap: 5px;
@@ -57,7 +56,7 @@
         content: '...'
       }
 
-      & *:not(.meta, .descendant *) {
+      & *:not(.meta, details, .descendant *) {
         margin-bottom: 1em;
       }
 
@@ -73,7 +72,7 @@
 
         & a {
           font-size: small;
-          color: #888;
+          color: #555;
         }
         & a:hover { 
           color: blue;
@@ -94,7 +93,7 @@
   <body>
     <header>
       <h1>Ayo's Threads</h1>
-      <p>Some of my favorite threads. See the <a href="https://ayco.io/sh/threads">source code</a>.</p>
+      <p>See the <a href="https://ayco.io/sh/threads">source code</a>. Or <a href="/">go home</a>.</p>
     </header>
     <main>
       <ul>
