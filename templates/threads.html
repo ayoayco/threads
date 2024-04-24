@@ -22,6 +22,9 @@
         color: white;
       }
     }
+    p, img, video {
+      margin-top: 1em;
+    }
     summary:hover {
       text-decoration: underline;
     }
@@ -39,7 +42,6 @@
     .card {
       border-bottom: 1px solid rgba(34, 34, 34, 0.15);
       margin-left: -40px;
-      margin-top: 1em;
       background-color: #fff;
       display: grid;
       grid-template-columns: 55px auto;
@@ -48,16 +50,14 @@
 
     .card_content {
 
+      padding: 1em 0;
+
       & .invisible {
         display: none;
       }
 
       & .ellipsis::after {
         content: '...'
-      }
-
-      & *:not(.meta, details, .descendant *) {
-        margin-bottom: 1em;
       }
 
       & img, & video {
