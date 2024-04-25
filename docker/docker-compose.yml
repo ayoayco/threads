@@ -1,0 +1,9 @@
+services:
+ threads:
+ container_name: threads
+ image: ayoayco/threads:latest
+ restart: unless-stopped
+ command: gunicorn -b 0.0.0.0:3000 -w 4 app:app
+ ports:
+ - "3000:3000"
+
