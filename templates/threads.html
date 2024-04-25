@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
+    <title>{{ app.title }}</title>
     <link rel="stylesheet" href="https://webcomponent.io/reset.css" />
     <style>
     body {
@@ -102,8 +102,9 @@
   </head>
   <body>
     <header>
-      <h1>{{ title }}</h1>
       <a href="/">go home</a></nav>
+      <h1>{{ app.title }}</h1>
+      <p>{{ app.description }}</p>
     </header>
     <main>
       <ul>
@@ -181,7 +182,7 @@
     </main>
     <footer>
       &copy; {{ attribution.year }} {{ attribution.owner }}
-      <p>See the <a href="https://ayco.io/sh/threads">source code</a>. Or <a href="/">go home</a>.</p>
+      <p>Powered by <a href="https://ayco.io/sh/threads">/threads</a></p>
     </footer>
   </body>
 </html>

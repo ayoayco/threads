@@ -6,7 +6,10 @@ threads = Blueprint('threads', __name__, template_folder='template')
 # TODO: move following to an app config or sqlite #########
 server = 'https://social.ayco.io'
 thread_ids = ['112319729193615365', '112258065967208438']
-title = "Ayo's Threads"
+app = {
+    "title":"Ayo's Threads",
+    "description": "Incubator for thoughts before they become a blog."
+}
 attribution = {
     "owner": "Ayo Ayco",
     "year": "2024"
@@ -16,13 +19,13 @@ attribution = {
 @threads.route('/')
 def home():
     statuses = fetch_statuses()
-    return render_template('threads.html', threads=statuses, title=title, attribution=attribution)
+    return render_template('threads.html', threads=statuses, app=app, attribution=attribution)
 
 @threads.route('/<path:id>')
 def thread(id):
     if id in thread_ids:
         status = fetch_thread(id)
-        return render_template('threads.html', threads=[status], title=title, attribution=attribution)
+        return render_template('threads.html', threads=[status], app=app, attribution=attribution)
     else:
         return '<h1>Not Found</h1><p>¯\_(ツ)_/¯</p><a href="/">go home</a>', 404
 
