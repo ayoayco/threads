@@ -8,7 +8,7 @@ server = 'https://social.ayco.io'
 thread_ids = ['112319729193615365', '112258065967208438']
 app = {
     "title":"Ayo's Threads",
-    "description": "Incubator for thoughts before they become a blog."
+    "description": "Release candidate for thoughts before they become a blog."
 }
 attribution = {
     "owner": "Ayo Ayco",

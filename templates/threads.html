@@ -23,6 +23,18 @@
       }
     }
 
+    main .back {
+      padding:1em 0 0;
+
+        & a {
+          text-decoration: none;
+        }
+
+        & a::before {
+          content: '\25C0';
+        }
+    }
+
     ul {
       list-style: none;
     }
@@ -102,14 +114,21 @@
   </head>
   <body>
     <header>
-      <a href="/">go home</a></nav>
+      <nav><a href="/">go home</a></nav>
       <h1>{{ app.title }}</h1>
       <p>{{ app.description }}</p>
     </header>
     <main>
+      {% if threads|length == 1 and threads[0].descendants %}
+      <div class="back">
+        <a href="{{url_for('threads.home')}}">Back</a>
+      </div>
+      {% endif %}
+
       <ul>
         {% for thread in threads %}
         <li class="card">
+
 
           <div class="card_avatar">
             {% if thread.account.avatar is defined %}
