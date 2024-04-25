@@ -7,24 +7,36 @@ threads = Blueprint('threads', __name__, template_folder='template')
 server = 'https://social.ayco.io'
 thread_ids = ['112319729193615365', '112258065967208438']
 
+# TODO: fetch only parent statuses
 @threads.route('/')
 def home():
-    threads = fetch_threads();
-    return render_template('threads.html', threads=threads)
+    statuses = fetch_statuses()
+    return render_template('threads.html', threads=statuses)
+
+# TODO: given parent status id, show page for full thread
+@threads.route('/<path:id>')
+def thread(id):
+    thread = fetch_thread(id)
+    return thread
 
 @threads.route('/api')
 def api():
-    threads = fetch_threads();
-    return threads;
+    return fetch_threads();
 
-def fetch_threads():
-    threads = []
+def fetch_statuses():
+    statuses = []
     for id in thread_ids:
         status = requests.get(server + '/api/v1/statuses/' + id ).json()
         status = clean_status(status)
-        status['descendants'] = get_descendants(server, status)
-        threads.append(status)
-    return threads
+        statuses.append(status)
+    return statuses
+
+
+def fetch_thread(id):
+    status = requests.get(server + '/api/v1/statuses/' + id ).json()
+    status = clean_status(status)
+    status['descendants'] = get_descendants(server, status)
+    return render_template('threads.html', threads=[status])
 
 def get_descendants(server, status):
     author_id = status['account']['id']

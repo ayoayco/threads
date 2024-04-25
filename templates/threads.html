@@ -22,19 +22,7 @@
         color: white;
       }
     }
-    main {
-      & p, & img, & video {
-        margin-top: 5px;
-      }
-    }
-    summary:hover {
-      text-decoration: underline;
-    }
-    summary {
-      color: blue;
-      cursor: pointer;
-      margin-top: 1em;
-    }
+
     ul {
       list-style: none;
     }
@@ -62,6 +50,10 @@
         content: '...'
       }
 
+      & img, & video, & p {
+        margin-bottom: 1em;
+      }
+
       & img, & video {
         border-radius: 5px;
         max-width: 100%;
@@ -81,6 +73,13 @@
         }
         
       }
+
+      & .action {
+        color: blue;
+        margin: 1em 0;
+        cursor: pointer;
+        margin-top: 1em;
+      }
     }
 
     .card_avatar img {
@@ -99,6 +98,7 @@
       <p>See the <a href="https://ayco.io/sh/threads">source code</a>. Or <a href="/">go home</a>.</p>
     </header>
     <main>
+
       <ul>
         {% for thread in threads %}
         <li class="card">
@@ -111,9 +111,7 @@
 
 
           <div class="card_content">
-            <div class="meta">
-              <a href="{{thread.url}}" target="_blank">{{ thread.created_at }}</a>
-            </div>
+
             {{thread.content | safe}} 
 
             {% for media in thread.media_attachments %}
@@ -127,8 +125,11 @@
               {% endif %}
             {% endfor %}
 
-            <details>
-              <summary>See more ({{ thread.descendants | length }})</summary>
+            {% if thread.descendants %}
+              <div class="meta">
+                <a href="{{thread.url}}" target="_blank">{{ thread.created_at }}</a>
+              </div>
+
               <ul>
                 {% for descendant in thread.descendants %}
                 <li class="card descendant">
@@ -139,9 +140,6 @@
                   </div>
 
                   <div class="card_content">
-                    <div class="meta">
-                      <a href="{{descendant.url}}" target="_blank">{{ descendant.created_at }}</a>
-                    </div>
                     {{ descendant.content | safe }}
                     {% for media in descendant.media_attachments%}
                       {% if media.type == 'image'%}
@@ -153,11 +151,17 @@
                       </video> 
                       {% endif %}
                     {% endfor %}
+                    <div class="meta">
+                      <a href="{{descendant.url}}" target="_blank">{{ descendant.created_at }}</a>
+                    </div>
                   </div>
                 <li>
                 {% endfor %}
               </ul>
-            </details>
+
+            {% else %}
+              <a class="action" href="{{ url_for('threads.thread', id=thread.id) }}">Read full thread</a>
+            {% endif %}
 
           </div>
         </li>
