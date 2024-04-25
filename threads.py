@@ -19,8 +19,11 @@ def home():
 
 @threads.route('/<path:id>')
 def thread(id):
-    status = fetch_thread(id)
-    return render_template('threads.html', threads=[status], title=title, attribution=attribution)
+    if id in thread_ids:
+        status = fetch_thread(id)
+        return render_template('threads.html', threads=[status], title=title, attribution=attribution)
+    else:
+        return '<h1>Not Found</h1><p>¯\_(ツ)_/¯</p><a href="/">go home</a>', 404
 
 @threads.route('/api')
 def api():
@@ -29,6 +32,7 @@ def api():
 @threads.route('/api/<path:id>')
 def api_thread(id):
     return fetch_thread(id)
+
 
 def fetch_statuses():
     statuses = []
