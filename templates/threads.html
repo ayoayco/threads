@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ayo's Threads</title>
+    <title>{{ title }}</title>
     <link rel="stylesheet" href="https://webcomponent.io/reset.css" />
     <style>
     body {
@@ -61,6 +61,14 @@
         border: 1px solid rgba(34, 34, 34, 0.15);
       }
 
+      & .author a {
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
       & .meta {
         margin-bottom: 5px;
 
@@ -94,11 +102,10 @@
   </head>
   <body>
     <header>
-      <h1>Ayo's Threads</h1>
-      <p>See the <a href="https://ayco.io/sh/threads">source code</a>. Or <a href="/">go home</a>.</p>
+      <h1>{{ title }}</h1>
+      <a href="/">go home</a></nav>
     </header>
     <main>
-
       <ul>
         {% for thread in threads %}
         <li class="card">
@@ -111,6 +118,10 @@
 
 
           <div class="card_content">
+
+            <h3 class="author">
+              <a rel="author" href="{{thread.account.url}}">{{thread.account.display_name}}</a>
+            </h3>
 
             {{thread.content | safe}} 
 
@@ -169,7 +180,8 @@
       </ul>
     </main>
     <footer>
-      &copy; 2024 Ayo Ayco
+      &copy; {{ attribution.year }} {{ attribution.owner }}
+      <p>See the <a href="https://ayco.io/sh/threads">source code</a>. Or <a href="/">go home</a>.</p>
     </footer>
   </body>
 </html>
