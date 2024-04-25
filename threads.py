@@ -3,7 +3,7 @@ import requests
 
 threads = Blueprint('threads', __name__, template_folder='template')
 
-# TODO: move following to an app config or sqlite
+# TODO: move following to an app config or sqlite #########
 server = 'https://social.ayco.io'
 thread_ids = ['112319729193615365', '112258065967208438']
 title = "Ayo's Threads"
@@ -11,6 +11,7 @@ attribution = {
     "owner": "Ayo Ayco",
     "year": "2024"
 }
+###########################################################
 
 @threads.route('/')
 def home():
