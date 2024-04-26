@@ -78,7 +78,7 @@ def clean_author(account):
     if 'emojis' in account and len(account['emojis']) > 0:
         name = account['display_name']
         for emoji in account['emojis']:
-            account['display_name'] = name.replace(":" + emoji['shortcode'] + ":", '<img class="emoji" src="'+emoji['url']+'" />')
+            account['display_name'] = name.replace(":" + emoji['shortcode'] + ":", '<img alt="' + emoji['shortcode'] + ' emoji" class="emoji" src="'+emoji['url']+'" />')
 
     return clean_dict(account, ['avatar', 'display_name', 'id', 'url'])
 
@@ -86,7 +86,7 @@ def clean_status(status):
     clean = clean_dict(status, ['id', 'content', 'created_at', 'url', 'media_attachments', 'card'])
     clean['account'] = clean_author(status['account'])
     for emoji in status['emojis']:
-        clean['content'] = clean['content'].replace(":" + emoji['shortcode'] + ":", '<img class="emoji" src="'+emoji['url']+'" />')
+        clean['content'] = clean['content'].replace(":" + emoji['shortcode'] + ":", '<img alt="' + emoji['shortcode'] + ' emoji" class="emoji" src="'+emoji['url']+'" />')
     return clean
 
 def clean_dict(dict, keys):
