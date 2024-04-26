@@ -38,6 +38,7 @@
     ul {
       list-style: none;
     }
+
     .card {
       border-bottom: 1px solid rgba(34, 34, 34, 0.15);
       margin-left: -40px;
@@ -67,7 +68,7 @@
 
       & .body {
 
-        & img:not(.emoji), & video, & .link_card {
+        & .media, & .link_card {
           margin-bottom: 5px;
         }
 
@@ -180,9 +181,9 @@
               {% if thread.descendants is defined %}
                 {% for media in thread.media_attachments %}
                   {% if media.type == 'image'%}
-                  <img src="{{media.preview_url}}" />
+                  <img class="media" src="{{media.preview_url}}" />
                   {% elif media.type == 'gifv' %}
-                  <video controls autoplay="autoplay" muted loop>
+                  <video class="media" controls autoplay="autoplay" muted loop>
                     <source src="{{media.url}}" type="video/mp4">
                     Your browser does not support the video tag.
                   </video> 
@@ -211,9 +212,9 @@
                       {{ descendant.content | safe }}
                       {% for media in descendant.media_attachments%}
                         {% if media.type == 'image'%}
-                        <img src="{{media.preview_url}}" />
+                        <img class="media" src="{{media.preview_url}}" />
                         {% elif media.type == 'gifv' %}
-                        <video controls autoplay="autoplay" muted loop>
+                        <video class="media" controls autoplay="autoplay" muted loop>
                           <source src="{{media.url}}" type="video/mp4">
                           Your browser does not support the video tag.
                         </video> 
