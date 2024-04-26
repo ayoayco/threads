@@ -171,7 +171,7 @@
             {% endif %}
           </div>
 
-          <div class="card_content">
+          <div class="card_content" id="{{ thread.id }}">
             <h3 class="author">
               <a rel="author" href="{{thread.account.url}}"
                 >{{thread.account.display_name | safe}}</a
@@ -226,7 +226,7 @@
                   {% endif %}
                 </div>
 
-                <div class="card_content">
+                <div class="card_content" id="{{ descendant.id }}">
                   <h3 class="author">
                     <a rel="author" href="{{descendant.account.url}}"
                       >{{descendant.account.display_name | safe}}</a
