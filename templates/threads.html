@@ -7,14 +7,15 @@
     <meta name="theme-color" content="#3054bf">
     {% if threads|length == 1 %}
     <meta name="description" content="{{ threads[0].content }}" />
+    <meta property="og:description" content="{{ threads[0].content }}" />
     {% else %}
     <meta name="description" content="{{ app.description  }}" />
+    <meta property="og:description" content="{{ app.description }}" />
     {% endif %}
     <meta name="author" content="{{ attribution.owner }}" />
-    <meta property="og:site_name" content="{{ app.title }}" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="{{ app.site_name }}" />
     <meta property="og:title" content="{{ app.title }}" />
-    <meta property="og:description" content="{{ app.description }}" />
 
     <link rel="stylesheet" href="https://webcomponent.io/reset.css" />
     <style>

@@ -9,6 +9,7 @@ threads = Blueprint('threads', __name__, template_folder='template')
 server = 'https://social.ayco.io'
 thread_ids = ['112258065967208438', '109545132056133905']
 app = {
+    "site_name": "ayco.io/threads",
     "title":"Ayo's Threads",
     "description": "Incubator for thoughts before they become a blog."
 }
