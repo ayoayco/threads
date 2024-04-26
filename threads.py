@@ -2,6 +2,7 @@ from flask import Blueprint, render_template
 import requests
 import datetime
 import markdown
+import re
 
 threads = Blueprint('threads', __name__, template_folder='template')
 
@@ -38,6 +39,7 @@ def home():
 def thread(id):
     if id in thread_ids:
         status = fetch_thread(id)
+        status['content_text'] = clean_html(status['content']).strip()
         return render_template('threads.html', threads=[status], app=app, attribution=attribution)
     else:
         return '<h1>Not Found</h1><p>¯\_(ツ)_/¯</p><a href="/">go home</a>', 404
@@ -95,3 +97,8 @@ def clean_status(status):
 def clean_dict(dict, keys):
     return {k: dict[k] for k in keys}
 
+CLEANR = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
+
+def clean_html(raw_html):
+    cleantext = re.sub(CLEANR, '', raw_html)
+    return cleantext
