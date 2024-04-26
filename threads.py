@@ -5,7 +5,7 @@ threads = Blueprint('threads', __name__, template_folder='template')
 
 # TODO: move following to an app config or sqlite #########
 server = 'https://social.ayco.io'
-thread_ids = ['112319729193615365', '112258065967208438', '109545132056133905']
+thread_ids = ['112258065967208438', '109545132056133905']
 app = {
     "title":"Ayo's Threads",
     "description": "Incubator for thoughts before they become a blog."
