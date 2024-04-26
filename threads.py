@@ -5,7 +5,7 @@ threads = Blueprint('threads', __name__, template_folder='template')
 
 # TODO: move following to an app config or sqlite #########
 server = 'https://social.ayco.io'
-thread_ids = ['112319729193615365', '112258065967208438']
+thread_ids = ['112319729193615365', '112258065967208438', '109545132056133905']
 app = {
     "title":"Ayo's Threads",
     "description": "Release candidate for thoughts before they become a blog."
@@ -64,6 +64,11 @@ def get_descendants(server, status):
     return descendants
 
 def clean_author(account):
+    if 'emojis' in account and len(account['emojis']) > 0:
+        name = account['display_name']
+        for emoji in account['emojis']:
+            account['display_name'] = name.replace(":" + emoji['shortcode'] + ":", '<img class="emoji" src="'+emoji['url']+'" />')
+
     return clean_dict(account, ['avatar', 'display_name', 'id', 'url'])
 
 def clean_status(status):

@@ -61,16 +61,22 @@
       & .ellipsis::after {
         content: '...'
       }
+      & .body {
 
-      & img, & video, & p {
-        margin-bottom: 1em;
-      }
+        & img, & video {
+          margin-bottom: 5px;
+        }
 
-      & img, & video {
-        border-radius: 5px;
-        max-width: 100%;
-        object-fit: cover;
-        border: 1px solid rgba(34, 34, 34, 0.15);
+        & p {
+          margin-bottom: 1em;
+        }
+
+        & img, & video, & .link_card {
+          border-radius: 5px;
+          max-width: 100%;
+          object-fit: cover;
+          border: 1px solid rgba(34, 34, 34, 0.15);
+        }
       }
 
       & .author a {
@@ -78,6 +84,11 @@
 
         &:hover {
           text-decoration: underline;
+        }
+
+        & .emoji {
+          display: inline;
+          width: 1rem;
         }
       }
 
@@ -99,6 +110,13 @@
         margin: 1em 0;
         cursor: pointer;
         margin-top: 1em;
+      }
+
+      & .link_card {
+        & strong, & em, & small {
+          display: block;
+        }
+        padding: 1em;
       }
     }
 
@@ -140,21 +158,24 @@
           <div class="card_content">
 
             <h3 class="author">
-              <a rel="author" href="{{thread.account.url}}">{{thread.account.display_name}}</a>
+              <a rel="author" href="{{thread.account.url}}">{{thread.account.display_name | safe}}</a>
             </h3>
 
-            {{thread.content | safe}} 
+            <div class="body">
+              {{thread.content | safe}} 
 
-            {% for media in thread.media_attachments %}
-              {% if media.type == 'image'%}
-              <img src="{{media.url}}" />
-              {% elif media.type == 'gifv' %}
-              <video controls autoplay="autoplay" muted loop>
-                <source src="{{media.url}}" type="video/mp4">
-                Your browser does not support the video tag.
-              </video> 
-              {% endif %}
-            {% endfor %}
+              {% for media in thread.media_attachments %}
+                {% if media.type == 'image'%}
+                <img src="{{media.url}}" />
+                {% elif media.type == 'gifv' %}
+                <video controls autoplay="autoplay" muted loop>
+                  <source src="{{media.url}}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video> 
+                {% endif %}
+              {% endfor %}
+            </div>
+
 
             {% if thread.descendants %}
               <div class="meta">
@@ -171,17 +192,33 @@
                   </div>
 
                   <div class="card_content">
-                    {{ descendant.content | safe }}
-                    {% for media in descendant.media_attachments%}
-                      {% if media.type == 'image'%}
-                      <img src="{{media.url}}" />
-                      {% elif media.type == 'gifv' %}
-                      <video controls autoplay="autoplay" muted loop>
-                        <source src="{{media.url}}" type="video/mp4">
-                        Your browser does not support the video tag.
-                      </video> 
+                    <div class="body">
+                      {{ descendant.content | safe }}
+                      {% for media in descendant.media_attachments%}
+                        {% if media.type == 'image'%}
+                        <img src="{{media.url}}" />
+                        {% elif media.type == 'gifv' %}
+                        <video controls autoplay="autoplay" muted loop>
+                          <source src="{{media.url}}" type="video/mp4">
+                          Your browser does not support the video tag.
+                        </video> 
+                        {% endif %}
+                      {% endfor %}
+
+                      {% if descendant.card %}
+                      <a href="{{ descendant.card.url }}">
+                        <div class="link_card">
+
+                          <small>
+                            {{ descendant.card.provider_name or descendant.card.provider_url }}
+                          </small>
+                          <strong>{{ descendant.card.title }}</strong>
+                          <em>{{descendant.card.description}}</em>
+                        </div>
+                      </a>
                       {% endif %}
-                    {% endfor %}
+                    </div>
+
                     <div class="meta">
                       <a href="{{descendant.url}}" target="_blank">{{ descendant.created_at }}</a>
                     </div>
