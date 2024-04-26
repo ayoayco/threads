@@ -1,147 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ app.title }}</title>
     <link rel="stylesheet" href="https://webcomponent.io/reset.css" />
     <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 570px;
-      margin: 0 auto;
-      color: #232323;
-      padding: 5px;
-    }
-    header, footer {
-      background: linear-gradient(45deg, #3054bf, #416fff);
-      padding: 1em;
-      color: white;
-      border-radius: 5px;
-      & a {
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        color: #232323;
+        padding: 5px;
+      }
+      header, footer, main {
+        padding: 1em;
+      }
+      header, footer {
+        background: linear-gradient(45deg, #3054bf, #416fff);
         color: white;
-      }
-    }
-
-    main .back {
-      padding:1em 0 0;
-
+        border-radius: 5px;
         & a {
-          text-decoration: none;
-        }
-
-        & a::before {
-          content: '\25C0';
-        }
-    }
-
-    ul {
-      list-style: none;
-    }
-
-    .card {
-      border-bottom: 1px solid rgba(34, 34, 34, 0.15);
-      margin-left: -40px;
-      background-color: #fff;
-      display: grid;
-      grid-template-columns: 55px auto;
-      gap: 5px;
-    }
-
-    .card_content {
-
-      padding: 1em 0;
-
-      & .invisible {
-        display: none;
-      }
-
-      & .emoji {
-        display: inline;
-        height: calc(1rem + 6px);
-        margin-bottom: -4px;
-      }
-
-      & .ellipsis::after {
-        content: '...'
-      }
-
-      & .body {
-
-        & .media, & .link_card {
-          margin-bottom: 5px;
-        }
-
-        & p {
-          margin-bottom: 1em;
-        }
-
-        & img:not(.emoji), & video, & .link_card {
-          border-radius: 5px;
-          max-width: 100%;
-          object-fit: cover;
-          border: 1px solid rgba(34, 34, 34, 0.15);
+          color: white;
         }
       }
 
-      & .author a {
-        text-decoration: none;
+      main .back {
+          & a {
+            text-decoration: none;
+          }
+          & a::before {
+            content: '\25C0';
+          }
+      }
 
-        &:hover {
-          text-decoration: underline;
+      ul {
+        list-style: none;
+      }
+
+      .card {
+        margin-left: -40px;
+        background-color: #fff;
+        display: grid;
+        grid-template-columns: 55px auto;
+        gap: 5px;
+        padding: 1em 0;
+      }
+
+      .card_content {
+        & .invisible {
+          display: none;
         }
 
-      }
-
-      & .meta {
-        margin-bottom: 5px;
-
-        & a {
-          font-size: small;
-          color: #555;
+        & .emoji {
+          display: inline;
+          height: calc(1rem + 6px);
+          margin-bottom: -4px;
         }
-        & a:hover { 
-          color: blue;
+
+        & .ellipsis::after {
+          content: '...'
         }
-        
-      }
 
-      & .action {
-        color: blue;
-        margin: 1em 0;
-        cursor: pointer;
-        margin-top: 1em;
-      }
+        & .body {
 
-      & .link_card:hover {
-        color: blue;
-        text-decoration-color: blue;
-        border-color: blue;
-      }
+          & .media, & .link_card {
+            border: 1px solid rgba(34, 34, 34, 0.15);
+            border-radius: 5px;
+            box-shadow: 5px 25px 10px -25px rgba(34, 34, 34, 0.15);
+            max-width: 100%;
+            margin-bottom: 1em;
+            object-fit: cover;
+          }
 
-      & .link_card {
-        color: #555;
-        text-decoration: underline;
-        text-decoration-color; #888;
-        box-shadow: 5px 25px 10px -25px rgba(34, 34, 34, 0.15);
+          & .media:hover, & .link_card:hover {
+            color: blue;
+            text-decoration-color: blue;
+            border-color: blue;
+          }
 
-        & strong, & small {
-          text-decoration-thickness: 1px;
+
+          & p {
+            margin-bottom: 0.5em;
+          }
+        }
+
+        & .author a {
           display: block;
+          margin-bottom: 0.5em;
+          text-decoration: none;
+          color: #232323;
+
+          &:hover {
+            text-decoration: underline;
+          }
+
         }
 
-        padding: 1rem;
+        & .meta {
+          margin-bottom: 5px;
+
+          & a {
+            font-size: small;
+            color: #555;
+          }
+          & a:hover {
+            color: blue;
+          }
+
+        }
+
+        & .action {
+          color: blue;
+          margin: 1em 0;
+          cursor: pointer;
+          margin-top: 1em;
+        }
+
+        & .link_card {
+          color: #555;
+          text-decoration: underline;
+          text-decoration-color: #888;
+
+          & strong, & small {
+            text-decoration-thickness: 1px;
+            display: block;
+          }
+
+          padding: 1rem;
+        }
       }
-    }
 
-    .card_avatar img {
-      border: 1px solid rgba(34, 34, 34, 0.35);
-      border-radius: 50%;
-      display: inline;
-      margin-top: 1em;
-      width: 50px;
-    }
-
+      .card_avatar img {
+        border-radius: 50%;
+        display: inline;
+        width: 50px;
+      }
     </style>
   </head>
   <body>
@@ -160,93 +154,133 @@
       <ul>
         {% for thread in threads %}
         <li class="card">
-
-
           <div class="card_avatar">
             {% if thread.account.avatar is defined %}
-            <img class="avatar" src="{{thread.account.avatar}}" />
+            <a href="{{ thread.account.url }}">
+              <img class="avatar" src="{{ thread.account.avatar }}"
+                alt="avatar of {{ thread.account.display_name }}"
+                title="avatar of {{ thread.account.display_name }}" />
+            </a>
             {% endif %}
           </div>
 
-
           <div class="card_content">
-
             <h3 class="author">
-              <a rel="author" href="{{thread.account.url}}">{{thread.account.display_name | safe}}</a>
+              <a rel="author" href="{{thread.account.url}}"
+                >{{thread.account.display_name | safe}}</a
+              >
             </h3>
 
             <div class="body">
-              {{thread.content | safe}} 
-
-              {% if thread.descendants is defined %}
-                {% for media in thread.media_attachments %}
-                  {% if media.type == 'image'%}
-                  <img class="media" src="{{media.preview_url}}" />
-                  {% elif media.type == 'gifv' %}
-                  <video class="media" controls autoplay="autoplay" muted loop>
-                    <source src="{{media.url}}" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video> 
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
+              {{thread.content | safe}} {% if thread.descendants is defined %}
+              {% for media in thread.media_attachments %} {% if media.type ==
+              'image'%}
+              <a href="{{ media.url }}">
+                <img
+                  class="media"
+                  src="{{media.preview_url}}"
+                  alt="{{ media.description or 'media attachment' }}"
+                  title="{{ media.description or 'media attachment' }}"
+                />
+              </a>
+              {% elif media.type == 'gifv' %}
+              <video
+                class="media"
+                controls
+                autoplay="autoplay"
+                muted
+                loop
+                alt="{{ media.description or 'media attachment' }}"
+                title="{{ media.description or 'media attachment' }}"
+              >
+                <source src="{{media.url}}" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              {% endif %} {% endfor %} {% endif %}
             </div>
 
-
             {% if thread.descendants is defined %}
-              <div class="meta">
-                <a href="{{thread.url}}" target="_blank">{{ thread.created_at }}</a>
-              </div>
+            <div class="meta">
+              <a href="{{thread.url}}" target="_blank"
+                >{{ thread.created_at }}</a
+              >
+            </div>
 
-              <ul>
-                {% for descendant in thread.descendants %}
-                <li class="card descendant">
-                  <div class="card_avatar">
-                    {% if descendant.account.avatar is defined %}
-                    <img class="avatar" src="{{thread.account.avatar}}" />
+            <ul>
+              {% for descendant in thread.descendants %}
+              <li class="card descendant">
+                <div class="card_avatar">
+                  {% if descendant.account.avatar is defined %}
+                  <a href="{{ descendant.account.url }}">
+                    <img class="avatar" src="{{ descendant.account.avatar }}"
+                      alt="avatar of {{ descendant.account.display_name }}"
+                      title="avatar of {{ descendant.account.display_name }}" />
+                  </a>
+                  {% endif %}
+                </div>
+
+                <div class="card_content">
+                  <h3 class="author">
+                    <a rel="author" href="{{descendant.account.url}}"
+                      >{{descendant.account.display_name | safe}}</a
+                    >
+                  </h3>
+                  <div class="body">
+                    {{ descendant.content | safe }} {% for media in
+                    descendant.media_attachments%} {% if media.type == 'image'%}
+                    <a href="{{ media.url }}">
+                      <img
+                        class="media"
+                        src="{{media.preview_url}}"
+                        alt="{{ media.description or 'media attachment' }}"
+                        title="{{ media.description or 'media attachment' }}"
+                      />
+                    </a>
+                    {% elif media.type == 'gifv' %}
+                    <video
+                      class="media"
+                      controls
+                      autoplay="autoplay"
+                      muted
+                      loop
+                      alt="{{ media.description or 'media attachment' }}"
+                      title="{{ media.description or 'media attachment' }}"
+                    >
+                      <source src="{{media.url}}" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    {% endif %} {% endfor %} {% if descendant.card %}
+                    <a href="{{ descendant.card.url }}">
+                      <div class="link_card">
+                        <small>
+                          {{ descendant.card.provider_name or
+                          descendant.card.provider_url }}
+                        </small>
+                        <strong>{{ descendant.card.title }}</strong>
+                        <small>{{descendant.card.description}}</small>
+                      </div>
+                    </a>
                     {% endif %}
                   </div>
 
-                  <div class="card_content">
-                    <div class="body">
-                      {{ descendant.content | safe }}
-                      {% for media in descendant.media_attachments%}
-                        {% if media.type == 'image'%}
-                        <img class="media" src="{{media.preview_url}}" />
-                        {% elif media.type == 'gifv' %}
-                        <video class="media" controls autoplay="autoplay" muted loop>
-                          <source src="{{media.url}}" type="video/mp4">
-                          Your browser does not support the video tag.
-                        </video> 
-                        {% endif %}
-                      {% endfor %}
-
-                      {% if descendant.card %}
-                      <a href="{{ descendant.card.url }}">
-                        <div class="link_card">
-
-                          <small>
-                            {{ descendant.card.provider_name or descendant.card.provider_url }}
-                          </small>
-                          <strong>{{ descendant.card.title }}</strong>
-                          <small>{{descendant.card.description}}</small>
-                        </div>
-                      </a>
-                      {% endif %}
-                    </div>
-
-                    <div class="meta">
-                      <a href="{{descendant.url}}" target="_blank">{{ descendant.created_at }}</a>
-                    </div>
+                  <div class="meta">
+                    <a href="{{descendant.url}}" target="_blank"
+                      >{{ descendant.created_at }}</a
+                    >
                   </div>
-                <li>
-                {% endfor %}
-              </ul>
+                </div>
+              </li>
+
+              <li>{% endfor %}</li>
+            </ul>
 
             {% else %}
-              <a class="action" href="{{ url_for('threads.thread', id=thread.id) }}">Read full thread</a>
+            <a
+              class="action"
+              href="{{ url_for('threads.thread', id=thread.id) }}"
+              >Read full thread</a
+            >
             {% endif %}
-
           </div>
         </li>
         {% endfor %}
@@ -256,9 +290,9 @@
       <p>
         Copyright &copy;
         {% if attribution.current_year %}
-          {{ attribution.year }}-{{ attribution.current_year }}
-        {%else%}
-          {{ attribution.year }}
+          {{ attribution.year}}-{{ attribution.current_year }}
+        {% else %}
+          {{ attribution.year}}
         {% endif %}
         {{ attribution.owner }}
       </p>
