@@ -85,6 +85,8 @@ def clean_author(account):
 def clean_status(status):
     clean = clean_dict(status, ['id', 'content', 'created_at', 'url', 'media_attachments', 'card'])
     clean['account'] = clean_author(status['account'])
+    for emoji in status['emojis']:
+        clean['content'] = clean['content'].replace(":" + emoji['shortcode'] + ":", '<img class="emoji" src="'+emoji['url']+'" />')
     return clean
 
 def clean_dict(dict, keys):

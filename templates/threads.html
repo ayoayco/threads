@@ -38,9 +38,6 @@
     ul {
       list-style: none;
     }
-    .card.descendant {
-      padding-bottom: 1em;
-    }
     .card {
       border-bottom: 1px solid rgba(34, 34, 34, 0.15);
       margin-left: -40px;
@@ -58,12 +55,19 @@
         display: none;
       }
 
+      & .emoji {
+        display: inline;
+        height: calc(1rem + 6px);
+        margin-bottom: -4px;
+      }
+
       & .ellipsis::after {
         content: '...'
       }
+
       & .body {
 
-        & img, & video {
+        & img:not(.emoji), & video, & .link_card {
           margin-bottom: 5px;
         }
 
@@ -71,7 +75,7 @@
           margin-bottom: 1em;
         }
 
-        & img, & video, & .link_card {
+        & img:not(.emoji), & video, & .link_card {
           border-radius: 5px;
           max-width: 100%;
           object-fit: cover;
@@ -86,10 +90,6 @@
           text-decoration: underline;
         }
 
-        & .emoji {
-          display: inline;
-          width: 1rem;
-        }
       }
 
       & .meta {
@@ -112,11 +112,24 @@
         margin-top: 1em;
       }
 
+      & .link_card:hover {
+        color: blue;
+        text-decoration-color: blue;
+        border-color: blue;
+      }
+
       & .link_card {
-        & strong, & em, & small {
+        color: #555;
+        text-decoration: underline;
+        text-decoration-color; #888;
+        box-shadow: 5px 25px 10px -25px rgba(34, 34, 34, 0.15);
+
+        & strong, & small {
+          text-decoration-thickness: 1px;
           display: block;
         }
-        padding: 1em;
+
+        padding: 1rem;
       }
     }
 
@@ -164,20 +177,22 @@
             <div class="body">
               {{thread.content | safe}} 
 
-              {% for media in thread.media_attachments %}
-                {% if media.type == 'image'%}
-                <img src="{{media.url}}" />
-                {% elif media.type == 'gifv' %}
-                <video controls autoplay="autoplay" muted loop>
-                  <source src="{{media.url}}" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video> 
-                {% endif %}
-              {% endfor %}
+              {% if thread.descendants is defined %}
+                {% for media in thread.media_attachments %}
+                  {% if media.type == 'image'%}
+                  <img src="{{media.preview_url}}" />
+                  {% elif media.type == 'gifv' %}
+                  <video controls autoplay="autoplay" muted loop>
+                    <source src="{{media.url}}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video> 
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
             </div>
 
 
-            {% if thread.descendants %}
+            {% if thread.descendants is defined %}
               <div class="meta">
                 <a href="{{thread.url}}" target="_blank">{{ thread.created_at }}</a>
               </div>
@@ -196,7 +211,7 @@
                       {{ descendant.content | safe }}
                       {% for media in descendant.media_attachments%}
                         {% if media.type == 'image'%}
-                        <img src="{{media.url}}" />
+                        <img src="{{media.preview_url}}" />
                         {% elif media.type == 'gifv' %}
                         <video controls autoplay="autoplay" muted loop>
                           <source src="{{media.url}}" type="video/mp4">
@@ -213,7 +228,7 @@
                             {{ descendant.card.provider_name or descendant.card.provider_url }}
                           </small>
                           <strong>{{ descendant.card.title }}</strong>
-                          <em>{{descendant.card.description}}</em>
+                          <small>{{descendant.card.description}}</small>
                         </div>
                       </a>
                       {% endif %}
