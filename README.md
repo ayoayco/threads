@@ -1,6 +1,8 @@
 # Threads
 
-Show off your favorite public threads!
+Show off your favorite public threads and offer hand-picked, fine-grained, topical subscriptions!
+
+See it [in action](https://ayco.io/threads).
 
 ## Project setup
 

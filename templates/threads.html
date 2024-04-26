@@ -4,6 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ app.title }}</title>
+    <meta name="theme-color" content="#3054bf">
+    {% if threads|length == 1 %}
+    <meta name="description" content="{{ threads[0].content }}" />
+    {% else %}
+    <meta name="description" content="{{ app.description  }}" />
+    {% endif %}
+    <meta name="author" content="{{ attribution.owner }}" />
+    <meta property="og:site_name" content="{{ app.title }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ app.title }}" />
+    <meta property="og:description" content="{{ app.description }}" />
+
     <link rel="stylesheet" href="https://webcomponent.io/reset.css" />
     <style>
       body {
@@ -13,8 +25,11 @@
         color: #232323;
         padding: 5px;
       }
-      header, footer, main {
+      header, footer {
         padding: 1em;
+      }
+      main {
+        padding: 1em 0;
       }
       header, footer {
         background: linear-gradient(45deg, #3054bf, #416fff);
@@ -151,7 +166,7 @@
   </head>
   <body>
     <header>
-      <nav><a href="/">go home</a></nav>
+      <nav><a href="/">Go home</a></nav>
       <h1>{{ app.title }}</h1>
       <p>{{ app.description }}</p>
     </header>
@@ -237,30 +252,33 @@
                     >
                   </h3>
                   <div class="body">
-                    {{ descendant.content | safe }} {% for media in
-                    descendant.media_attachments%} {% if media.type == 'image'%}
-                    <a href="{{ media.url }}">
-                      <img
+                    {{ descendant.content | safe }}
+                    {% for media in descendant.media_attachments%}
+                      {% if media.type == 'image'%}
+                      <a href="{{ media.url }}">
+                        <img
+                          class="media"
+                          src="{{media.preview_url}}"
+                          alt="{{ media.description or 'media attachment' }}"
+                          title="{{ media.description or 'media attachment' }}"
+                        />
+                      </a>
+                      {% elif media.type == 'gifv' %}
+                      <video
                         class="media"
-                        src="{{media.preview_url}}"
+                        controls
+                        autoplay="autoplay"
+                        muted
+                        loop
                         alt="{{ media.description or 'media attachment' }}"
                         title="{{ media.description or 'media attachment' }}"
-                      />
-                    </a>
-                    {% elif media.type == 'gifv' %}
-                    <video
-                      class="media"
-                      controls
-                      autoplay="autoplay"
-                      muted
-                      loop
-                      alt="{{ media.description or 'media attachment' }}"
-                      title="{{ media.description or 'media attachment' }}"
-                    >
-                      <source src="{{media.url}}" type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                    {% endif %} {% endfor %} {% if descendant.card %}
+                      >
+                        <source src="{{media.url}}" type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                      {% endif %}
+                    {% endfor %}
+                    {% if descendant.card %}
                     <a href="{{ descendant.card.url }}">
                       <div class="link_card">
                         <small>
