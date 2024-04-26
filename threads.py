@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template
 import requests
 import datetime
+import markdown
 
 threads = Blueprint('threads', __name__, template_folder='template')
 
@@ -85,6 +86,7 @@ def clean_author(account):
 def clean_status(status):
     clean = clean_dict(status, ['id', 'content', 'created_at', 'url', 'media_attachments', 'card'])
     clean['account'] = clean_author(status['account'])
+    clean['content'] = markdown.markdown("<section markdown='block'>"+ clean['content'] +"<section>", extensions=['md_in_html'])
     for emoji in status['emojis']:
         clean['content'] = clean['content'].replace(":" + emoji['shortcode'] + ":", '<img alt="' + emoji['shortcode'] + ' emoji" class="emoji" src="'+emoji['url']+'" />')
     return clean

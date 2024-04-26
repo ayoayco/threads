@@ -30,7 +30,7 @@ Show off your favorite public threads!
     $ . .venv/bin/activate
 
     # install dependencies
-    (.venv)$ python -m pip install flask requests
+    (.venv)$ python -m pip install flask requests markdown
 
     # rejoice!
     ```
