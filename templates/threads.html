@@ -237,7 +237,15 @@
       </ul>
     </main>
     <footer>
-      &copy; {{ attribution.year }} {{ attribution.owner }}
+      <p>
+        Copyright &copy;
+        {% if attribution.current_year %}
+          {{ attribution.year }}-{{ attribution.current_year }}
+        {%else%}
+          {{ attribution.year }}
+        {% endif %}
+        {{ attribution.owner }}
+      </p>
       <p>Powered by <a href="https://ayco.io/sh/threads">/threads</a></p>
     </footer>
   </body>

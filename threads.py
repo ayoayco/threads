@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 import requests
+import datetime
 
 threads = Blueprint('threads', __name__, template_folder='template')
 
@@ -12,9 +13,19 @@ app = {
 }
 attribution = {
     "owner": "Ayo Ayco",
-    "year": "2024"
+    "year": "2022" # earliest year in featured posts
 }
 ###########################################################
+
+@threads.before_request
+def middleware():
+    # check current year and put ange as attribution
+    currentDateTime = datetime.datetime.now()
+    date = currentDateTime.date()
+    year = date.strftime("%Y")
+    if year != attribution['year']:
+        attribution['current_year'] = year
+
 
 @threads.route('/')
 def home():
