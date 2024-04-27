@@ -39,7 +39,9 @@ def home():
 def thread(id):
     if id in thread_ids:
         status = fetch_thread(id)
-        status['content_text'] = clean_html(status['content']).strip()
+        status['summary'] = clean_html(status['content']).strip()
+        if len(status['summary']) > 69:
+            status['summary'] = status['summary'][:69] + '...'
         return render_template('threads.html', threads=[status], app=app, attribution=attribution)
     else:
         return '<h1>Not Found</h1><p>¯\_(ツ)_/¯</p><a href="/">go home</a>', 404
