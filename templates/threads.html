@@ -218,7 +218,7 @@
               </h3>
 
               <div class="anchor">
-                <a href="{{ url_for('threads.thread', id=thread['id']) }}">anchor</a>
+                <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + thread['id'] }}">anchor</a>
               </div>
             </div>
 
