@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 import requests
-import datetime
+from datetime import datetime, timedelta
 import markdown
 import re
 
@@ -23,11 +23,32 @@ attribution = {
 @threads.before_request
 def middleware():
     # check current year and put ange as attribution
-    currentDateTime = datetime.datetime.now()
+    currentDateTime = datetime.now()
     date = currentDateTime.date()
     year = date.strftime("%Y")
     if year != attribution['year']:
         attribution['current_year'] = year
+
+@threads.app_template_filter('time_ago')
+def time_ago(date):
+    now = datetime.now()
+    date_obj = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
+    delta = now - date_obj
+    delta = delta - timedelta(hours=2)
+    days = delta.days
+    seconds = delta.seconds
+    if seconds < 3600:
+        return str(seconds / 60).split('.')[0] + ' minutes ago'
+    elif days == 0:
+        hours = timedelta(seconds=seconds)
+        return str(hours).split(':')[0] + ' hours ago'
+    elif days < 7:
+        return str(days) + ' days ago'
+    return date_obj.strftime('%b %d, %Y')
+
+@threads.app_template_filter('format_date')
+def format_date(date):
+    return date.replace('T', ' ').split('.')[0]
 
 
 @threads.route('/')

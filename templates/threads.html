@@ -119,18 +119,17 @@
           grid-template-columns: auto auto;
           gap: 5px;
 
-          & .anchor:hover a {
-            display: block;
-          }
-
+          & .anchor,
           & .anchor a {
+            padding-top: 5px;
+            font-size: small;
             text-align: right;
-            display: none;
+            color: #555;
+            vertical-align: center;
           }
 
           & .author a {
             display: block;
-            margin-bottom: 0.5em;
             text-decoration: none;
             color: #232323;
 
@@ -212,13 +211,13 @@
           <div class="card_content" id="{{ thread.id }}">
             <div class="heading">
               <h3 class="author">
-                <a rel="author" href="{{thread.account.url}}"
-                  >{{thread.account.display_name | safe}}</a
-                >
+                <a rel="author" href="{{thread.account.url}}">{{thread.account.display_name | safe}}</a>
               </h3>
 
               <div class="anchor">
-                <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + thread['id'] }}">anchor</a>
+                <span title="{{ thread.created_at }}">{{ thread.created_at | time_ago }}</span> &middot;
+                <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + thread['id'] }}">anchor</a> &middot;
+                <a href="{{ thread.url }}" target="_blank">&nearr;</a>
               </div>
             </div>
 
@@ -251,12 +250,6 @@
             </div>
 
             {% if thread.descendants is defined %}
-            <div class="meta">
-              <a href="{{thread.url}}" target="_blank"
-                >{{ thread.created_at }}</a
-              >
-            </div>
-
             <ul>
               {% for descendant in thread.descendants %}
               <li class="card descendant">
@@ -279,7 +272,9 @@
                     </h3>
 
                     <div class="anchor">
-                      <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + descendant['id'] }}">anchor</a>
+                      <span title="{{ descendant.created_at }}">{{ descendant.created_at | time_ago }}</span> &middot;
+                      <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + descendant['id'] }}">anchor</a>&middot;
+                      <a href="{{ descendant.url }}" target="_blank">&nearr;</a>
                     </div>
                   </div>
 
@@ -322,12 +317,6 @@
                       </div>
                     </a>
                     {% endif %}
-                  </div>
-
-                  <div class="meta">
-                    <a href="{{descendant.url}}" target="_blank"
-                      >{{ descendant.created_at }}</a
-                    >
                   </div>
                 </div>
               </li>
