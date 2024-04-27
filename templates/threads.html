@@ -115,15 +115,15 @@
 
         & .heading {
 
-          &:hover .anchor {
+          display: grid;
+          grid-template-columns: auto auto;
+          gap: 5px;
+
+          & .anchor:hover a {
             display: block;
           }
 
-          display: grid;
-          grid-template-columns: 80% auto;
-          gap: 5px;
-
-          & .anchor {
+          & .anchor a {
             text-align: right;
             display: none;
           }
