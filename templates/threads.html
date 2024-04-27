@@ -68,6 +68,7 @@
       }
 
       .card_content {
+
         & .invisible {
           display: none;
         }
@@ -112,14 +113,31 @@
           }
         }
 
-        & .author a {
-          display: block;
-          margin-bottom: 0.5em;
-          text-decoration: none;
-          color: #232323;
+        & .heading {
 
-          &:hover {
-            text-decoration: underline;
+          &:hover .anchor {
+            display: block;
+          }
+
+          display: grid;
+          grid-template-columns: 80% auto;
+          gap: 5px;
+
+          & .anchor {
+            text-align: right;
+            display: none;
+          }
+
+          & .author a {
+            display: block;
+            margin-bottom: 0.5em;
+            text-decoration: none;
+            color: #232323;
+
+            &:hover {
+              text-decoration: underline;
+            }
+
           }
 
         }
@@ -183,7 +201,7 @@
         <li class="card">
           <div class="card_avatar">
             {% if thread.account.avatar is defined %}
-            <a href="{{ thread.account.url }}">
+            <a href="{{ thread.account.avatar }}">
               <img class="avatar" src="{{ thread.account.avatar }}"
                 alt="avatar of {{ thread.account.display_name }}"
                 title="avatar of {{ thread.account.display_name }}" />
@@ -192,11 +210,17 @@
           </div>
 
           <div class="card_content" id="{{ thread.id }}">
-            <h3 class="author">
-              <a rel="author" href="{{thread.account.url}}"
-                >{{thread.account.display_name | safe}}</a
-              >
-            </h3>
+            <div class="heading">
+              <h3 class="author">
+                <a rel="author" href="{{thread.account.url}}"
+                  >{{thread.account.display_name | safe}}</a
+                >
+              </h3>
+
+              <div class="anchor">
+                <a href="{{ url_for('threads.thread', id=thread['id']) }}">anchor</a>
+              </div>
+            </div>
 
             <div class="body">
               {{thread.content | safe}} {% if thread.descendants is defined %}
@@ -238,7 +262,7 @@
               <li class="card descendant">
                 <div class="card_avatar">
                   {% if descendant.account.avatar is defined %}
-                  <a href="{{ descendant.account.url }}">
+                  <a href="{{ descendant.account.avatar }}">
                     <img class="avatar" src="{{ descendant.account.avatar }}"
                       alt="avatar of {{ descendant.account.display_name }}"
                       title="avatar of {{ descendant.account.display_name }}" />
@@ -247,11 +271,18 @@
                 </div>
 
                 <div class="card_content" id="{{ descendant.id }}">
-                  <h3 class="author">
-                    <a rel="author" href="{{descendant.account.url}}"
-                      >{{descendant.account.display_name | safe}}</a
-                    >
-                  </h3>
+                  <div class="heading">
+                    <h3 class="author">
+                      <a rel="author" href="{{descendant.account.url}}"
+                        >{{descendant.account.display_name | safe}}</a
+                      >
+                    </h3>
+
+                    <div class="anchor">
+                      <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + descendant['id'] }}">anchor</a>
+                    </div>
+                  </div>
+
                   <div class="body">
                     {{ descendant.content | safe }}
                     {% for media in descendant.media_attachments%}
