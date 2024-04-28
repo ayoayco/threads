@@ -34,16 +34,19 @@ def time_ago(date):
     now = datetime.now()
     date_obj = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
     delta = now - date_obj
-    delta = delta - timedelta(hours=2)
     days = delta.days
-    seconds = delta.seconds
-    if seconds < 3600:
-        return str(seconds / 60).split('.')[0] + ' minutes ago'
-    elif days == 0:
-        hours = timedelta(seconds=seconds)
-        return str(hours).split(':')[0] + ' hours ago'
+    if days == 0:
+        return 'just today'
+    elif days == 1:
+        return 'yesterday'
     elif days < 7:
         return str(days) + ' days ago'
+    elif days < 28:
+        weeks = int(days) // 7
+        if (weeks == 1):
+            return 'a week ago'
+        else:
+            return str(weeks) + ' weeks ago'
     return date_obj.strftime('%b %d, %Y')
 
 @threads.app_template_filter('format_date')

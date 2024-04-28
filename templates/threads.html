@@ -208,7 +208,7 @@
               </h3>
 
               <div class="right_menu">
-                <a href="{{ thread.url }}" title="{{ thread.created_at }}">{{ thread.created_at | time_ago }}</a> &middot;
+                <a href="{{ thread.url }}" title="{{ thread.created_at | format_date }}">{{ thread.created_at | time_ago }}</a> &middot;
                 <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + thread['id'] }}">Anchor</a>
               </div>
             </div>
@@ -264,7 +264,7 @@
                     </h3>
 
                     <div class="right_menu">
-                      <a href="{{ descendant.url }}" title="{{ descendant.created_at }}">{{ descendant.created_at | time_ago }}</a> &middot;
+                      <a href="{{ descendant.url }}" title="{{ descendant.created_at | format_date }}">{{ descendant.created_at | time_ago }}</a> &middot;
                       <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + descendant['id'] }}">Anchor</a>
                     </div>
                   </div>
