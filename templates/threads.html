@@ -32,7 +32,6 @@
       header, footer {
         background: linear-gradient(45deg, #3054bf, #416fff);
         color: white;
-        border-radius: 5px;
         & a {
           color: white;
         }
@@ -48,7 +47,6 @@
       }
       .card {
         margin-left: -40px;
-        background-color: #fff;
         display: grid;
         grid-template-columns: 55px auto;
         gap: 5px;
@@ -172,6 +170,41 @@
         border-radius: 50%;
         display: inline;
         width: 50px;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html, body {
+            background: #212529;
+            color: #f8f9fa;
+
+        }
+        main a {
+            color: orange;
+
+        }
+        .card_content {
+            & .action {
+                color: orange;
+            }
+            & .heading .author a {
+                color: #f8f9fa;
+            }
+            & .body {
+                code {
+                  background: rgb(45, 51, 59);
+                  color: rgb(197, 209, 222);
+                }
+                & .media, & .link_card {
+                  border: 1px solid rgba(197, 209, 222, 0.15);
+                  color: #888;
+                }
+                & .media:hover, & .link_card:hover {
+                  color: orange;
+                  text-decoration-color: orange;
+                  border-color: orange;
+                }
+            }
+        }
       }
     </style>
   </head>
