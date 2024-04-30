@@ -24,7 +24,6 @@
         max-width: 600px;
         margin: 0 auto;
         color: #232323;
-        padding: 5px;
       }
       header, footer, main {
         padding: 1em;
@@ -50,7 +49,7 @@
         display: grid;
         grid-template-columns: 55px auto;
         gap: 5px;
-        padding: 1em 0;
+        padding-top: 1em;
       }
 
       .card_content {
@@ -209,6 +208,7 @@
     </style>
   </head>
   <body>
+    <a id="top"></a>
     <header>
       <nav><a href="/">Go home</a></nav>
       <h1>{{ app.title }}</h1>
@@ -359,6 +359,9 @@
         </li>
         {% endfor %}
       </ul>
+      {% if threads|length == 1 and threads[0].descendants|length > 1%}
+      <a href="#top">Top</a>
+      {% endif %}
     </main>
     <footer>
       <p>
