@@ -80,6 +80,10 @@
             display: inline;
           }
 
+          & a:has(.link_card) {
+            text-decoration: none
+          }
+
           & .media, & .link_card {
             border: 1px solid rgba(34, 34, 34, 0.15);
             border-radius: 5px;
@@ -87,6 +91,8 @@
             max-width: 100%;
             margin: 15px 0 1em;
             object-fit: cover;
+            text-decoration: none;
+            text-wrap: balance;
           }
 
           & .media:hover, & .link_card:hover {
@@ -113,11 +119,12 @@
             text-align: right;
             color: #888;
 
-            & a:hover{
-              color: blue
-            }
             & a{
               color: #888;
+
+                &:hover {
+                  color: blue;
+                }
             }
           }
 
@@ -182,14 +189,16 @@
         }
         main a {
             color: orange;
-
         }
         .card_content {
             & .action {
-                color: orange;
+              color: orange;
             }
             & .heading .author a {
-                color: #f8f9fa;
+              color: #f8f9fa;
+            }
+            & .heading .right_menu a:hover {
+              color: orange;
             }
             & .body {
                 code {
@@ -250,31 +259,47 @@
             </div>
 
             <div class="body">
-              {{thread.content | safe}} {% if thread.descendants is defined %}
-              {% for media in thread.media_attachments %} {% if media.type ==
-              'image'%}
-              <a href="{{ media.url }}">
-                <img
-                  class="media"
-                  src="{{media.preview_url}}"
-                  alt="{{ media.description or 'media attachment' }}"
-                  title="{{ media.description or 'media attachment' }}"
-                />
-              </a>
-              {% elif media.type == 'gifv' %}
-              <video
-                class="media"
-                controls
-                autoplay="autoplay"
-                muted
-                loop
-                alt="{{ media.description or 'media attachment' }}"
-                title="{{ media.description or 'media attachment' }}"
-              >
-                <source src="{{media.url}}" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              {% endif %} {% endfor %} {% endif %}
+              {{thread.content | safe}}
+              {% if thread.descendants is defined %}
+                {% for media in thread.media_attachments %}
+                  {% if media.type == 'image'%}
+                    <a href="{{ media.url }}">
+                      <img
+                        class="media"
+                        src="{{media.preview_url}}"
+                        alt="{{ media.description or 'media attachment' }}"
+                        title="{{ media.description or 'media attachment' }}"
+                      />
+                    </a>
+                    {% elif media.type == 'gifv' %}
+                    <video
+                      class="media"
+                      controls
+                      autoplay="autoplay"
+                      muted
+                      loop
+                      alt="{{ media.description or 'media attachment' }}"
+                      title="{{ media.description or 'media attachment' }}"
+                    >
+                      <source src="{{media.url}}" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    {% endif %}
+                {% endfor %}
+              {% endif %}
+                {% if thread.media_attachments|length <= 0 and thread.card %}
+                  <a href="{{ thread.card.url }}">
+                    <div class="link_card">
+                      <small>
+                        {{ thread.card.provider_name or
+                        thread.card.provider_url }}
+                      </small>
+                      <strong>{{ thread.card.title }}</strong>
+                      <small>{{thread.card.description}}</small>
+                    </div>
+                  </a>
+                {% endif %}
+
             </div>
 
             {% if thread.descendants is defined %}
@@ -307,7 +332,7 @@
 
                   <div class="body">
                     {{ descendant.content | safe }}
-                    {% for media in descendant.media_attachments%}
+                    {% for media in descendant.media_attachments %}
                       {% if media.type == 'image'%}
                       <a href="{{ media.url }}">
                         <img
@@ -332,17 +357,17 @@
                       </video>
                       {% endif %}
                     {% endfor %}
-                    {% if descendant.card %}
-                    <a href="{{ descendant.card.url }}">
-                      <div class="link_card">
-                        <small>
-                          {{ descendant.card.provider_name or
-                          descendant.card.provider_url }}
-                        </small>
-                        <strong>{{ descendant.card.title }}</strong>
-                        <small>{{descendant.card.description}}</small>
-                      </div>
-                    </a>
+                    {% if descendant.media_attachments|length <= 0 and descendant.card %}
+                      <a href="{{ descendant.card.url }}">
+                        <div class="link_card">
+                          <small>
+                            {{ descendant.card.provider_name or
+                            descendant.card.provider_url }}
+                          </small>
+                          <strong>{{ descendant.card.title }}</strong>
+                          <small>{{descendant.card.description}}</small>
+                        </div>
+                      </a>
                     {% endif %}
                   </div>
                 </div>
