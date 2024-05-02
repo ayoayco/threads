@@ -49,11 +49,6 @@ def time_ago(date):
             return str(weeks) + ' weeks ago'
     return date_obj.strftime('%b %d, %Y')
 
-@threads.app_template_filter('format_date')
-def format_date(date):
-    return date.replace('T', ' ').split('.')[0]
-
-
 @threads.route('/')
 def home():
     statuses = fetch_statuses()
