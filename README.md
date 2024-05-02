@@ -40,7 +40,7 @@ See it [in action](https://ayco.io/threads).
     $ . .venv/bin/activate
 
     # install dependencies
-    (.venv)$ python -m pip install flask requests markdown
+    (.venv)$ python -m pip install -r requirements.txt
 
     # rejoice!
     ```
