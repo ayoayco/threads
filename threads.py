@@ -8,7 +8,13 @@ threads = Blueprint('threads', __name__)
 
 # TODO: move following to an app config or sqlite #########
 server = 'https://social.ayco.io'
-thread_ids = ['1124002842533385', '112365019457303644', '112360396639315016', '112305891918761955', '112258065967208438', '109545132056133905']
+thread_ids = [
+    # '1124002842533385',
+    '112365019457303644',
+    '112360396639315016',
+    '112305891918761955',
+    '112258065967208438',
+    '109545132056133905']
 app = {
     "site_name": "ayco.io/threads",
     "title":"Ayo's Threads",
