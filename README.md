@@ -12,6 +12,8 @@ How it works:
 
 See it [in action](https://ayco.io/threads).
 
+> The project is currently experimental. Some improvements need to be made with regards to app configuration, storing data, and easy deployment & usage.
+
 ## Project setup
 
 1. Set up your **Debian** (for other environments, search for counterpart instructions)
