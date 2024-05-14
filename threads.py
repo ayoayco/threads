@@ -9,6 +9,7 @@ threads = Blueprint('threads', __name__)
 # TODO: move following to an app config or sqlite #########
 server = 'https://social.ayco.io'
 thread_ids = [
+    '112438729626526601',
     '112400284252533385',
     '112365019457303644',
     '112360396639315016',
