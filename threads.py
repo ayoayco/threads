@@ -42,26 +42,6 @@ def middleware():
     if year != attribution['year']:
         attribution['current_year'] = year
 
-@threads.app_template_filter('time_ago')
-def time_ago(date):
-    now = datetime.now()
-    date_obj = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
-    delta = now - date_obj
-    days = delta.days
-    if days == 0:
-        return 'just today'
-    elif days == 1:
-        return 'yesterday'
-    elif days < 7:
-        return str(days) + ' days ago'
-    elif days < 28:
-        weeks = int(days) // 7
-        if (weeks == 1):
-            return 'a week ago'
-        else:
-            return str(weeks) + ' weeks ago'
-    return date_obj.strftime('%b %d, %Y')
-
 @threads.route('/')
 def home():
     statuses = fetch_statuses()
