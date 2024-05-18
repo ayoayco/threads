@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import markdown
 import re
 
-threads = Blueprint('threads', __name__)
+threads = Blueprint('threads', __name__, template_folder='templates')
 
 # TODO: move following to an app config or sqlite #########
 server = 'https://social.ayco.io'
