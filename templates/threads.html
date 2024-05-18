@@ -40,19 +40,33 @@
       }
 
       main.home {
-        & .back {
+        & .back, & .hashtag {
           display: none
         }
+      }
+
+      main.thread {
+        & li:not(:last-of-type) .card_avatar::after {
+          content: " ";
+          display: block;
+          height: 100%;
+          border-right: 2px solid rgba(197, 209, 222, 0.15);
+          width: 26px;
+          margin-top: -8px;
+        }
+      }
+
+      .card_avatar img {
+        border: 2px solid rgba(197, 209, 222, 0.15);
+        border-radius: 50%;
+        display: inline;
+        width: 50px;
       }
 
       ul {
         list-style: none;
       }
 
-      .card.descendant {
-        /* TODO: damn, fix the markup maybe */
-        margin-left: calc(-80px - 1em - 5px);
-      }
       .card {
         margin-left: -40px;
         display: grid;
@@ -182,11 +196,6 @@
         }
       }
 
-      .card_avatar img {
-        border-radius: 50%;
-        display: inline;
-        width: 50px;
-      }
 
       @media (prefers-color-scheme: dark) {
         html, body {
@@ -310,7 +319,7 @@
             </div>
 
             {% if thread.descendants is defined %}
-            <ul>
+            </li>
               {% for descendant in thread.descendants %}
               <li class="card descendant">
                 <div class="card_avatar">
@@ -382,8 +391,7 @@
                 </div>
               </li>
 
-              <li>{% endfor %}</li>
-            </ul>
+            {% endfor %}
 
             {% else %}
             <a
@@ -391,6 +399,7 @@
               href="{{ url_for('threads.thread', id=thread.id) }}"
               >Read full thread</a
             >
+            </li>
             {% endif %}
           </div>
         </li>
