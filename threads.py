@@ -47,7 +47,9 @@ def middleware():
 @threads.route('/')
 def home():
     statuses = fetch_statuses()
-    return render_template('threads.html', threads=statuses, app=app, attribution=attribution)
+    currentDateTime = datetime.now()
+    date = currentDateTime.date()
+    return render_template('threads.html', threads=statuses, app=app, attribution=attribution, render_date=currentDateTime)
 
 @threads.route('/<path:id>')
 def thread(id):
