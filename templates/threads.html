@@ -17,6 +17,10 @@
     <meta property="og:site_name" content="{{ app.site_name }}" />
     <meta property="og:title" content="{{ app.title }}" />
 
+    <script type="module">
+      import TimeAgo from 'https://esm.sh/v135/@github/relative-time-element@4.4.0'
+    </script>
+
     <link rel="stylesheet" href="https://webcomponent.io/reset.css" />
     <style>
       html {
@@ -273,7 +277,9 @@
               </h3>
 
               <div class="right_menu">
-                <a href="{{ thread.url }}" title="{{ thread.created_at }}">{{ thread.created_at }}</a> &middot;
+                <a href="{{ thread.url }}" title="{{ thread.created_at }}">
+                  <relative-time datetime="{{ thread.created_at }}" precision="day">{{ thread.created_at }}</relative-time>
+                </a> &middot;
                 <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + thread['id'] }}">Anchor</a>
               </div>
             </div>
@@ -347,7 +353,9 @@
                     </h3>
 
                     <div class="right_menu">
-                      <a href="{{ descendant.url }}" title="{{ descendant.created_at }}">{{ descendant.created_at }}</a> &middot;
+                      <a href="{{ descendant.url }}" title="{{ descendant.created_at }}">
+                        <relative-time datetime="{{ descendant.created_at }}" precision="day">{{ descendant.created_at }}</relative-time>
+                      </a> &middot;
                       <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + descendant['id'] }}">Anchor</a>
                     </div>
                   </div>
