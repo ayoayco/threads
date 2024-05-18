@@ -50,7 +50,7 @@
           content: " ";
           display: block;
           height: 100%;
-          border-right: 2px solid rgba(197, 209, 222, 0.15);
+          border-right: 2px solid rgba(34, 34, 34, 0.15);
           width: 26px;
           margin-top: -8px;
         }
@@ -205,6 +205,12 @@
         }
         main a {
             color: orange;
+        }
+
+        main.thread {
+          & li:not(:last-of-type) .card_avatar::after {
+            border-right: 2px solid rgba(197, 209, 222, 0.15);
+          }
         }
         .card_content {
             & .action {
