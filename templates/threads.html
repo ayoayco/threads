@@ -39,6 +39,13 @@
         }
       }
 
+      main.home {
+        & .back,
+        & .top {
+          display: none
+        }
+      }
+
       ul {
         list-style: none;
       }
@@ -227,12 +234,10 @@
       <h1>{{ app.title }}</h1>
       <p>{{ app.description }}</p>
     </header>
-    <main>
-      {% if threads|length == 1 and threads[0].descendants %}
+    <main class={{ "thread" if threads|length == 1 else "home" }}>
       <div class="back">
         <a href="{{url_for('threads.home')}}">Back</a>
       </div>
-      {% endif %}
 
       <ul>
         {% for thread in threads %}
@@ -392,9 +397,7 @@
         </li>
         {% endfor %}
       </ul>
-      {% if threads|length == 1 and threads[0].descendants|length > 1%}
       <a href="#top">Top</a>
-      {% endif %}
     </main>
     <footer>
       <p>
