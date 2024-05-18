@@ -47,9 +47,7 @@ def middleware():
 @threads.route('/')
 def home():
     statuses = fetch_statuses()
-    currentDateTime = datetime.now()
-    date = currentDateTime.date()
-    return render_template('threads.html', threads=statuses, app=app, attribution=attribution, render_date=currentDateTime)
+    return render_template('threads.html', threads=statuses, app=app, attribution=attribution, render_date=datetime.now())
 
 @threads.route('/<path:id>')
 def thread(id):
@@ -58,7 +56,7 @@ def thread(id):
         status['summary'] = clean_html(status['content']).strip()
         if len(status['summary']) > 69:
             status['summary'] = status['summary'][:69] + '...'
-        return render_template('threads.html', threads=[status], app=app, attribution=attribution)
+        return render_template('threads.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
     else:
         return '<h1>Not Found</h1><p>¯\_(ツ)_/¯</p><a href="/">go home</a>', 404
 
