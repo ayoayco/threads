@@ -1,8 +1,23 @@
 from flask import Blueprint, render_template
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime
 import markdown
 import re
+
+##### Use app provided cache
+try:
+    from cache.cache import cache
+except ImportError:
+    print(' ! ERR: Cache module not found')
+
+def conditional_cache(dec):
+    def decorator(func):
+        if cache is None:
+            return func
+        return dec(func)
+    return decorator
+
+##########################################
 
 threads = Blueprint('threads', __name__, template_folder='templates')
 
@@ -66,7 +81,7 @@ def api():
 def api_thread(id):
     return fetch_thread(id)
 
-
+@conditional_cache(cache.cached(timeout=60))
 def fetch_statuses():
     statuses = []
     for id in thread_ids:
@@ -75,6 +90,7 @@ def fetch_statuses():
         statuses.append(status)
     return statuses
 
+@conditional_cache(cache.cached(timeout=60))
 def fetch_thread(id):
     status = requests.get(server + '/api/v1/statuses/' + id ).json()
     status = clean_status(status)
