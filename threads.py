@@ -3,7 +3,7 @@ import requests
 from datetime import datetime
 import markdown
 import re
-from cache import cache
+from .cache import cache
 
 threads = Blueprint('threads', __name__, template_folder='templates')
 
