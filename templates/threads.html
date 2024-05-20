@@ -272,9 +272,9 @@
 
           <div class="card_content" id="{{ thread.id }}">
             <div class="heading">
-              <h3 class="author">
+              <h2 class="author">
                 <a rel="author" href="{{thread.account.url}}">{{thread.account.display_name | safe}}</a>
-              </h3>
+              </h2>
 
               <div class="right_menu">
                 <a href="{{ thread.url }}" title="{{ thread.created_at }}">
@@ -346,11 +346,11 @@
 
                 <div class="card_content" id="{{ descendant.id }}">
                   <div class="heading">
-                    <h3 class="author">
+                    <h2 class="author">
                       <a rel="author" href="{{descendant.account.url}}"
                         >{{descendant.account.display_name | safe}}</a
                       >
-                    </h3>
+                    </h2>
 
                     <div class="right_menu">
                       <a href="{{ descendant.url }}" title="{{ descendant.created_at }}">
