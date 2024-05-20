@@ -33,6 +33,9 @@
         margin: 0 auto;
         color: var(--text-color-dark);
         font-size: var(--font-size-base);
+        display: grid;
+        padding: 0 1em;
+        gap: 1em;
 
         a {
           color: var(--color-link);
@@ -42,16 +45,21 @@
           font-size: var(--font-size-sm);
         }
       }
-      header, footer, main {
-        padding: 1em;
-      }
       header, footer {
         background: var(--ayo-gradient);
         color: var(--text-color-light);
+        border-radius: 5px;
+        padding: 1em;
+        text-wrap: balance;
 
         & a {
           color: var(--text-color-light);
         }
+      }
+
+      footer {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
       }
 
       main.home {
@@ -87,7 +95,7 @@
         display: grid;
         grid-template-columns: 55px auto;
         gap: 5px;
-        padding-top: 1em;
+        padding-bottom: 1em;
       }
 
       .card_content {
@@ -147,18 +155,22 @@
           display: grid;
           grid-template-columns: auto auto;
           gap: 5px;
+          height: 40px;
 
           & .right_menu {
-            padding-top: 5px;
-            font-size: small;
-            text-align: right;
+            font-size: var(--font-size-sm);
+            text-align:right;
+
+            & a, & span {
+              line-height: 40px;
+            }
 
             & a{
-              color: var(--text-color-dark-faded);
+              color: var(--text-color-dark);
 
-                &:hover {
-                  color: var(--color-link);
-                }
+              &:hover {
+                color: var(--color-link);
+              }
             }
           }
 
@@ -199,9 +211,8 @@
 
       @media (prefers-color-scheme: dark) {
         html, body {
-            background: #212529;
-            color: #f8f9fa;
-
+            background: var(--bg-darker);
+            color: var(--text-color-light);
         }
         main a {
             color: var(--color-brand-complement);
@@ -220,7 +231,7 @@
               color: #f8f9fa;
             }
             & .heading .right_menu a{
-              color: var(--text-color-light-faded);
+              color: var(--text-color-light);
 
               &:hover {
                 color: var(--color-brand-complement);
@@ -279,7 +290,8 @@
               <div class="right_menu">
                 <a href="{{ thread.url }}" title="{{ thread.created_at }}">
                   <relative-time datetime="{{ thread.created_at }}" precision="day">{{ thread.created_at }}</relative-time>
-                </a> &middot;
+                </a>
+                <span>&middot;</span>
                 <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + thread['id'] }}">anchor</a>
               </div>
             </div>
@@ -355,7 +367,8 @@
                     <div class="right_menu">
                       <a href="{{ descendant.url }}" title="{{ descendant.created_at }}">
                         <relative-time datetime="{{ descendant.created_at }}" precision="day">{{ descendant.created_at }}</relative-time>
-                      </a> &middot;
+                      </a>
+                      <span>&middot;</span>
                       <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + descendant['id'] }}">Anchor</a>
                     </div>
                   </div>
