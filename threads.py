@@ -90,7 +90,7 @@ async def fetch_statuses():
             statuses = await asyncio.gather(*(get(url, session) for url in urls))
             return statuses
     except:
-        return []
+        return None
 
 def fetch_thread(id):
     status = requests.get(server + '/api/v1/statuses/' + id ).json()
