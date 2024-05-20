@@ -21,6 +21,7 @@
       import TimeAgo from 'https://esm.sh/v135/@github/relative-time-element@4.4.0'
     </script>
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}" />
     <style>
       html {
@@ -30,7 +31,7 @@
         font-family: system-ui, sans-serif;
         max-width: 600px;
         margin: 0 auto;
-        color: #232323;
+        color: var(--text-color-dark);
       }
       header, footer, main {
         padding: 1em;
@@ -142,10 +143,9 @@
             padding-top: 5px;
             font-size: small;
             text-align: right;
-            color: #888;
 
             & a{
-              color: #888;
+              color: var(--text-color-dark);
 
                 &:hover {
                   color: blue;
@@ -280,7 +280,7 @@
                 <a href="{{ thread.url }}" title="{{ thread.created_at }}">
                   <relative-time datetime="{{ thread.created_at }}" precision="day">{{ thread.created_at }}</relative-time>
                 </a> &middot;
-                <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + thread['id'] }}">Anchor</a>
+                <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + thread['id'] }}">anchor</a>
               </div>
             </div>
 
