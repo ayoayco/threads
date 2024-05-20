@@ -2,3 +2,5 @@ flask
 requests
 markdown
 Flask-Caching
+aiohttp
+flask[async]

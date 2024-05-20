@@ -4,6 +4,8 @@ from datetime import datetime
 import markdown
 import re
 from .cache import cache
+import asyncio
+import aiohttp
 
 threads = Blueprint('threads', __name__, template_folder='templates')
 
@@ -44,8 +46,8 @@ def middleware():
         attribution['current_year'] = year
 
 @threads.route('/')
-def home():
-    statuses = fetch_statuses()
+async def home():
+    statuses = await fetch_statuses()
     return render_template('threads.html', threads=statuses, app=app, attribution=attribution, render_date=datetime.now())
 
 @threads.route('/<path:id>')
@@ -60,21 +62,34 @@ def thread(id):
         return '<h1>Not Found</h1><p>¯\_(ツ)_/¯</p><a href="/">go home</a>', 404
 
 @threads.route('/api')
-def api():
-    return fetch_statuses();
+async def api():
+    return await fetch_statuses();
 
 @threads.route('/api/<path:id>')
 def api_thread(id):
     return fetch_thread(id)
 
-@cache.cached(timeout=300)
-def fetch_statuses():
+async def get(url, session):
+    try:
+        async with session.get(url=url) as response:
+            res = await response.json()
+            return clean_status(res)
+    except Exception as e:
+        print(f"Unable to get url {url} due to {e.__class__}")
+
+def get_status_url(ser, id):
+    return f'{ser}/api/v1/statuses/{id}'
+
+# @cache.cached(timeout=300)
+async def fetch_statuses():
     statuses = []
-    for id in thread_ids:
-        status = requests.get(server + '/api/v1/statuses/' + id ).json()
-        status = clean_status(status)
-        statuses.append(status)
-    return statuses
+    urls = [get_status_url(server, id) for id in thread_ids]
+    try:
+        async with aiohttp.ClientSession() as session:
+            statuses = await asyncio.gather(*(get(url, session) for url in urls))
+            return statuses
+    except:
+        return []
 
 @cache.cached(timeout=300)
 def fetch_thread(id):
