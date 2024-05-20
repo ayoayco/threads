@@ -62,6 +62,11 @@
         border-bottom-right-radius: 0;
       }
 
+      main {
+        display: grid;
+        gap: 1em;
+      }
+
       main.home {
         & .back {
           display: none
@@ -89,13 +94,14 @@
       ul {
         list-style: none;
         padding-left: 0;
+        display: grid;
+        gap: 1em;
       }
 
       .card {
-        display: grid;
         grid-template-columns: 55px auto;
+        display: grid;
         gap: 5px;
-        padding-bottom: 1em;
       }
 
       .card_content {
@@ -146,7 +152,7 @@
           }
 
           & p {
-            margin-bottom: 0.5em;
+            margin-bottom: 1em;
           }
         }
 
