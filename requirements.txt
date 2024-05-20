@@ -1,6 +1,5 @@
-flask
+flask[async]
 requests
 markdown
 Flask-Caching
 aiohttp
-flask[async]
