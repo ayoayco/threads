@@ -180,17 +180,6 @@
             }
           }
 
-          & .author a {
-            display: block;
-            text-decoration: none;
-            color: var(--text-color-dark);
-
-            &:hover {
-              text-decoration: underline;
-            }
-
-          }
-
         }
 
         & .action {
@@ -232,9 +221,6 @@
         .card_content {
             & .action {
               color: var(--color-brand-complement);
-            }
-            & .heading .author a {
-              color: #f8f9fa;
             }
             & .heading .right_menu a{
               color: var(--text-color-light);
@@ -279,18 +265,16 @@
         <li class="card">
           <div class="card_avatar">
             {% if thread.account.avatar is defined %}
-            <a href="{{ thread.account.avatar }}">
-              <img class="avatar" src="{{ thread.account.avatar }}"
-                alt="avatar of {{ thread.account.display_name }}"
-                title="avatar of {{ thread.account.display_name }}" />
-            </a>
+            <img class="avatar" src="{{ thread.account.avatar }}"
+              alt="avatar of {{ thread.account.display_name }}"
+              title="avatar of {{ thread.account.display_name }}" />
             {% endif %}
           </div>
 
           <div class="card_content" id="{{ thread.id }}">
             <div class="heading">
-              <h2 class="author">
-                <a rel="author" href="{{thread.account.url}}">{{thread.account.display_name | safe}}</a>
+              <h2 class="author" rel="author">
+                {{thread.account.display_name | safe}}
               </h2>
 
               <div class="right_menu">
@@ -298,7 +282,7 @@
                   <relative-time datetime="{{ thread.created_at }}" precision="day">{{ thread.created_at }}</relative-time>
                 </a>
                 <span>&middot;</span>
-                <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + thread['id'] }}">anchor</a>
+                <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + thread['id'] }}">Anchor</a>
               </div>
             </div>
 
@@ -354,20 +338,16 @@
               <li class="card descendant">
                 <div class="card_avatar">
                   {% if descendant.account.avatar is defined %}
-                  <a href="{{ descendant.account.avatar }}">
-                    <img class="avatar" src="{{ descendant.account.avatar }}"
-                      alt="avatar of {{ descendant.account.display_name }}"
-                      title="avatar of {{ descendant.account.display_name }}" />
-                  </a>
+                  <img class="avatar" src="{{ descendant.account.avatar }}"
+                    alt="avatar of {{ descendant.account.display_name }}"
+                    title="avatar of {{ descendant.account.display_name }}" />
                   {% endif %}
                 </div>
 
                 <div class="card_content" id="{{ descendant.id }}">
                   <div class="heading">
-                    <h2 class="author">
-                      <a rel="author" href="{{descendant.account.url}}"
-                        >{{descendant.account.display_name | safe}}</a
-                      >
+                    <h2 class="author" rel="author">
+                      {{descendant.account.display_name | safe}}
                     </h2>
 
                     <div class="right_menu">
