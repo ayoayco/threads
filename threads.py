@@ -62,10 +62,12 @@ def thread(id):
         return '<h1>Not Found</h1><p>¯\_(ツ)_/¯</p><a href="/">go home</a>', 404
 
 @threads.route('/api')
+@cache.cached(timeout=300)
 async def api():
     return await fetch_statuses();
 
 @threads.route('/api/<path:id>')
+@cache.cached(timeout=300)
 def api_thread(id):
     return fetch_thread(id)
 
@@ -80,7 +82,6 @@ async def get(url, session):
 def get_status_url(ser, id):
     return f'{ser}/api/v1/statuses/{id}'
 
-# @cache.cached(timeout=300)
 async def fetch_statuses():
     statuses = []
     urls = [get_status_url(server, id) for id in thread_ids]
@@ -91,7 +92,6 @@ async def fetch_statuses():
     except:
         return []
 
-@cache.cached(timeout=300)
 def fetch_thread(id):
     status = requests.get(server + '/api/v1/statuses/' + id ).json()
     status = clean_status(status)
