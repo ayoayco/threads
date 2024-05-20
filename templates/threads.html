@@ -32,15 +32,21 @@
         max-width: 600px;
         margin: 0 auto;
         color: var(--text-color-dark);
+        font-size: var(--font-size-base);
+
+        a {
+          color: var(--color-link);
+        }
       }
       header, footer, main {
         padding: 1em;
       }
       header, footer {
-        background: linear-gradient(45deg, #3054bf, #416fff);
-        color: white;
+        background: var(--ayo-gradient);
+        color: var(--text-color-light);
+
         & a {
-          color: white;
+          color: var(--text-color-light);
         }
       }
 
@@ -122,11 +128,10 @@
           }
 
           & .media:hover, & .link_card:hover {
-            color: blue;
-            text-decoration-color: blue;
-            border-color: blue;
+            color: var(--color-link);
+            text-decoration-color: var(--color-link);
+            border-color: var(--color-link);
           }
-
 
           & p {
             margin-bottom: 0.5em;
@@ -145,10 +150,10 @@
             text-align: right;
 
             & a{
-              color: var(--text-color-dark);
+              color: var(--text-color-dark-faded);
 
                 &:hover {
-                  color: blue;
+                  color: var(--color-link);
                 }
             }
           }
@@ -156,7 +161,7 @@
           & .author a {
             display: block;
             text-decoration: none;
-            color: #232323;
+            color: var(--text-color-dark);
 
             &:hover {
               text-decoration: underline;
@@ -166,30 +171,17 @@
 
         }
 
-        & .meta {
-          margin-bottom: 5px;
-
-          & a {
-            font-size: small;
-            color: #555;
-          }
-          & a:hover {
-            color: blue;
-          }
-
-        }
-
         & .action {
-          color: blue;
+          color: var(--color-link);
           margin: 1em 0;
           cursor: pointer;
           margin-top: 1em;
         }
 
         & .link_card {
-          color: #555;
+          color: var(--text-color-dark-faded);
           text-decoration: underline;
-          text-decoration-color: #888;
+          text-decoration-color: var(--text-color-light-faded);
 
           & strong, & small {
             text-decoration-thickness: 1px;
@@ -208,7 +200,7 @@
 
         }
         main a {
-            color: orange;
+            color: var(--color-brand-complement);
         }
 
         main.thread {
@@ -218,13 +210,17 @@
         }
         .card_content {
             & .action {
-              color: orange;
+              color: var(--color-brand-complement);
             }
             & .heading .author a {
               color: #f8f9fa;
             }
-            & .heading .right_menu a:hover {
-              color: orange;
+            & .heading .right_menu a{
+              color: var(--text-color-light-faded);
+
+              &:hover {
+                color: var(--color-brand-complement);
+              }
             }
             & .body {
                 code {
@@ -233,12 +229,12 @@
                 }
                 & .media, & .link_card {
                   border: 1px solid rgba(197, 209, 222, 0.15);
-                  color: #888;
+                  color: var(--text-color-light-faded);
                 }
                 & .media:hover, & .link_card:hover {
-                  color: orange;
-                  text-decoration-color: orange;
-                  border-color: orange;
+                  color: var(--color-brand-complement);
+                  text-decoration-color: var(--color-brand-complement);
+                  border-color:  var(--color-brand-complement);
                 }
             }
         }
