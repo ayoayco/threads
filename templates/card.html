@@ -19,7 +19,7 @@
                   <relative-time datetime="{{ thread.created_at }}" precision="day">{{ thread.created_at }}</relative-time>
                 </a>
                 <span>&middot;</span>
-                <a href="{{ url_for('threads.thread', id=thread['id']) + '#' + thread['id'] }}">Anchor</a>
+                <a href="{{ url_for('threads.thread', id=parent_id) + '#' + thread['id'] }}">Anchor</a>
               </div>
             </div>
 

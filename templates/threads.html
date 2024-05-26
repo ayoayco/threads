@@ -253,12 +253,12 @@
         <a href="{{url_for('threads.home')}}">Back</a>
       </div>
         {% for thread in threads %}
-          {% with thread=thread, is_thread=threads|length > 1 %}
+          {% with thread=thread, parent_id=thread.id, is_thread=threads|length > 1 %}
             {% include "card.html" %}
           {% endwith %}
           {% if thread.descendants is defined %}
             {% for descendant in thread.descendants %}
-              {% with thread=descendant %}
+              {% with thread=descendant, parent_id=thread.id %}
                 {% include "card.html" %}
               {% endwith %}
             {% endfor %}
