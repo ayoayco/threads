@@ -46,11 +46,13 @@ def middleware():
         attribution['current_year'] = year
 
 @threads.route('/')
+@cache.cached(timeout=300)
 async def home():
     statuses = await fetch_statuses()
     return render_template('threads.html', threads=statuses, app=app, attribution=attribution, render_date=datetime.now())
 
 @threads.route('/<path:id>')
+@cache.cached(timeout=300)
 def thread(id):
     if id in thread_ids:
         status = fetch_thread(id)
