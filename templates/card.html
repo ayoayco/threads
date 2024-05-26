@@ -25,7 +25,6 @@
 
             <div class="body">
               {{thread.content | safe}}
-              {% if thread.descendants is defined %}
                 {% for media in thread.media_attachments %}
                   {% if media.type == 'image'%}
                     <a href="{{ media.url }}">
@@ -53,7 +52,6 @@
                     </video>
                     {% endif %}
                 {% endfor %}
-              {% endif %}
                 {% if thread.media_attachments|length <= 0 and thread.card %}
                   <a href="{{ thread.card.url }}">
                     <div class="link_card">
