@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, current_app
 import requests
 from datetime import datetime
 import markdown
@@ -10,7 +10,6 @@ import aiohttp
 threads = Blueprint('threads', __name__, template_folder='templates')
 
 # TODO: move following to an app config or sqlite #########
-server = 'https://social.ayco.io'
 thread_ids = [
     '112524983806134679',
     '112461583113763423',
@@ -26,16 +25,14 @@ thread_ids = [
 # TODO: implement pagination
 #    '109545132056133905'
 ]
-app = {
-    "site_name": "ayco.io/threads",
-    "title":"Ayo's Threads",
-    "description": "Incubator for thoughts before they become a blog."
-}
-attribution = {
-    "owner": "Ayo Ayco",
-    "year": "2022" # earliest year in featured posts
-}
+
 ###########################################################
+
+def get_attribution():
+    return current_app.config['ATTRIBUTION']
+
+def get_app_config():
+    return current_app.config['APPS']['threads']
 
 @threads.before_request
 def middleware():
@@ -43,6 +40,7 @@ def middleware():
     currentDateTime = datetime.now()
     date = currentDateTime.date()
     year = date.strftime("%Y")
+    attribution = get_attribution()
     if year != attribution['year']:
         attribution['current_year'] = year
 
@@ -50,12 +48,16 @@ def middleware():
 @cache.cached(timeout=300)
 async def home():
     statuses = await fetch_statuses()
+    attribution = get_attribution()
+    app = get_app_config()
     return render_template('threads.html', threads=statuses, app=app, attribution=attribution, render_date=datetime.now())
 
 @threads.route('/<path:id>')
 @cache.cached(timeout=300)
 def thread(id):
     if id in thread_ids:
+        attribution = get_attribution()
+        app = get_app_config()
         status = fetch_thread(id)
         status['summary'] = clean_html(status['content']).strip()
         if len(status['summary']) > 69:
@@ -85,9 +87,12 @@ async def get(url, session):
 def get_status_url(ser, id):
     return f'{ser}/api/v1/statuses/{id}'
 
+def server():
+    return current_app.config['APPS']['threads']['server']
+
 async def fetch_statuses():
     statuses = []
-    urls = [get_status_url(server, id) for id in thread_ids]
+    urls = [get_status_url(server(), id) for id in thread_ids]
     try:
         async with aiohttp.ClientSession() as session:
             statuses = await asyncio.gather(*(get(url, session) for url in urls))
@@ -96,14 +101,14 @@ async def fetch_statuses():
         return None
 
 def fetch_thread(id):
-    status = requests.get(server + '/api/v1/statuses/' + id ).json()
+    status = requests.get(server() + '/api/v1/statuses/' + id ).json()
     status = clean_status(status)
-    status['descendants'] = get_descendants(server, status)
+    status['descendants'] = get_descendants(server(), status)
     return status
 
 def get_descendants(server, status):
     author_id = status['account']['id']
-    context = requests.get(server + '/api/v1/statuses/' + status['id'] + '/context').json()
+    context = requests.get(server() + '/api/v1/statuses/' + status['id'] + '/context').json()
     descendants = []
     for reply in context['descendants']:
         # TODO: the following condition will include a reply to a reply of the author 

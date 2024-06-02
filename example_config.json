@@ -1,0 +1,14 @@
+{
+  "APPS": {
+    "threads": {
+      "site_name": "Thoughts",
+      "title":"Thoughts",
+      "description": "Hand-picked public posts from my social feed",
+      "server" : "https://social.ayco.io"
+    }
+  },
+  "ATTRIBUTION": {
+      "owner": "Author Name",
+      "year": "2024"
+  }
+}
