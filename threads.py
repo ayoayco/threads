@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, current_app
 import requests
+import json
 from datetime import datetime
 import markdown
 import re
@@ -108,7 +109,7 @@ def fetch_thread(id):
 
 def get_descendants(server, status):
     author_id = status['account']['id']
-    context = requests.get(server() + '/api/v1/statuses/' + status['id'] + '/context').json()
+    context = requests.get(server + '/api/v1/statuses/' + status['id'] + '/context').json()
     descendants = []
     for reply in context['descendants']:
         # TODO: the following condition will include a reply to a reply of the author 
