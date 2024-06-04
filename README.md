@@ -9,7 +9,7 @@ How it works:
 2. clean HTML with some styling will be sent to the viewer's browser
 3. bit of client-side JS for progressive enhancement:
     1. `<relative-time>` by GitHub: https://github.com/github/relative-time-element
-4. self-hostable with the app configuration in `threads.py` file -- we are working on a docker way and easy configuration
+4. self-hostable with the app configuration in `config.json` file -- we are working on a docker way and easy configuration
 
 See it [in action](https://ayco.io/threads).
 
@@ -44,6 +44,9 @@ See it [in action](https://ayco.io/threads).
 
     # install dependencies
     (.venv)$ python -m pip install -r requirements.txt
+
+    # create configuration from example config file
+    (.venv)$ cp ./example_config.json ./config.json
 
     # rejoice!
     ```
