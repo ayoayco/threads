@@ -7,7 +7,8 @@ These are streams of thought you decide to float to your personal site for being
 How it works:
 1. a featured status will be fetched on the server along with qualified "descendants", which are replies of the same author in a single thread.
 2. clean HTML with some styling will be sent to the viewer's browser
-3. it is therefore zero-JS as of yet
+3. bit of client-side JS for progressive enhancement:
+    1. `<relative-time>` by GitHub: https://github.com/github/relative-time-element
 4. self-hostable with the app configuration in `threads.py` file -- we are working on a docker way and easy configuration
 
 See it [in action](https://ayco.io/threads).
