@@ -27,6 +27,8 @@ See it [in action](https://ayco.io/threads).
     $ sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools python3-venv
     ```
 
+> For MacOS: https://docs.python.org/3/using/mac.html
+
 2. Install dependencies
 
     ```bash
