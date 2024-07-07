@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, current_app
 import requests
-import json
 from datetime import datetime
 import markdown
 import re
@@ -80,11 +79,12 @@ def api_thread(id):
 
 async def get(url, session):
     try:
-        async with session.get(url=url) as response:
+        async with session.get(url, ssl=False) as response:
             res = await response.json()
             return clean_status(res)
     except Exception as e:
         print(f"Unable to get url {url} due to {e.__class__}")
+        return {}
 
 def get_status_url(ser, id):
     return f'{ser}/api/v1/statuses/{id}'
