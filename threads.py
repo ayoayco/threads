@@ -11,6 +11,7 @@ threads = Blueprint('threads', __name__, template_folder='templates')
 
 # TODO: move following to an app config or sqlite #########
 thread_ids = [
+    '112979161274124372',
     '112857903897175549',
     '112857168376771706',
     '112524983806134679',
@@ -67,7 +68,7 @@ def thread(id):
             status['summary'] = status['summary'][:69] + '...'
         return render_template('threads.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
     else:
-        return '<h1>Not Found</h1><p>¯\_(ツ)_/¯</p><a href="/">go home</a>', 404
+        return '<h1>Not Found</h1><p>🤷🤷‍♀️🤷‍♂️</p><a href="/">go home</a>', 404
 
 @threads.route('/api')
 @cache.cached(timeout=300)
