@@ -35,6 +35,9 @@ See it [in action](https://ayco.io/threads).
     # clone the project 
     $ git clone git@git.sr.ht:~ayoayco/threads
 
+    # create app config from example
+    $ cp example_config.json config.json
+
     # go into the project directory
     $ cd threads
 
