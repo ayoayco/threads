@@ -29,17 +29,17 @@ See it [in action](https://ayco.io/threads).
 
 > For MacOS: https://docs.python.org/3/using/mac.html
 
-2. Install dependencies
+2. Install dependencies and set up the project
 
     ```bash
     # clone the project 
     $ git clone git@git.sr.ht:~ayoayco/threads
 
-    # create app config from example
-    $ cp example_config.json config.json
-
     # go into the project directory
     $ cd threads
+
+    # create app config from example
+    $ cp example_config.json config.json
 
     # create python environment:
     $ python3 -m venv .venv
