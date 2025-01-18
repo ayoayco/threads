@@ -16,8 +16,10 @@
         <a href="{{ thread.url }}" title="{{ thread.created_at }}">
           <relative-time datetime="{{ thread.created_at }}" precision="day">{{ thread.created_at }}</relative-time>
         </a>
+        {% if not is_tag %}
         <span>&middot;</span>
         <a href="{{ url_for('threads.thread', id=parent_id) + '#' + thread['id'] }}">Anchor</a>
+        {% endif %}
       </div>
     </div>
 
@@ -51,7 +53,7 @@
         {% endif %}
 
     </div>
-    {% if is_thread %}
+    {% if is_thread and not is_tag %}
     <a href="{{ url_for('threads.thread', id=thread.id) }}">Read full thread</a>
     {% endif %}
 </article>

@@ -1,12 +1,10 @@
 from flask import Blueprint, render_template, current_app
 import requests
 from datetime import datetime
-import markdown
-import re
 from .cache import cache
 import asyncio
 import aiohttp
-from . import mastodon
+from . import mastodon, utils
 
 threads = Blueprint('threads', __name__, template_folder='templates')
 
@@ -75,7 +73,9 @@ async def home():
 async def tag(id):
     attribution = get_attribution()
     app = get_app_config()
-    return render_template('tag.html', tag=id, app=app, attribution=attribution, render_date=datetime.now())
+    statuses = mastodon.get_account_tagged_statuses(app, id)
+
+    return render_template('tag.html', threads=statuses, tag=id, app=app, attribution=attribution, render_date=datetime.now())
 
 
 @threads.route('/<path:id>')
@@ -85,7 +85,7 @@ def thread(id):
         attribution = get_attribution()
         app = get_app_config()
         status = fetch_thread(id)
-        status['summary'] = clean_html(status['content']).strip()
+        status['summary'] = utils.clean_html(status['content']).strip()
         if len(status['summary']) > 69:
             status['summary'] = status['summary'][:69] + '...'
         return render_template('threads.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
@@ -106,7 +106,7 @@ async def get(url, session):
     try:
         async with session.get(url, ssl=False) as response:
             res = await response.json()
-            return clean_status(res)
+            return utils.clean_status(res)
     except Exception as e:
         print(f"Unable to get url {url} due to {e.__class__}")
         return {}
@@ -129,7 +129,7 @@ async def fetch_statuses():
 
 def fetch_thread(id):
     status = requests.get(server() + '/api/v1/statuses/' + id ).json()
-    status = clean_status(status)
+    status = utils.clean_status(status)
     status['descendants'] = get_descendants(server(), status)
     return status
 
@@ -141,30 +141,6 @@ def get_descendants(server, status):
         # TODO: the following condition will include a reply to a reply of the author 
         # - edge case: a different author replies in the thread and the author replies then replies again
         if reply['account']['id'] == author_id and reply['in_reply_to_account_id'] == author_id:
-            descendants.append(clean_status(reply))
+            descendants.append(utils.clean_status(reply))
     return descendants
-
-def clean_author(account):
-    if 'emojis' in account and len(account['emojis']) > 0:
-        name = account['display_name']
-        for emoji in account['emojis']:
-            account['display_name'] = name.replace(":" + emoji['shortcode'] + ":", '<img alt="' + emoji['shortcode'] + ' emoji" class="emoji" src="'+emoji['url']+'" />')
-
-    return clean_dict(account, ['avatar', 'display_name', 'id', 'url'])
-
-def clean_status(status):
-    clean = clean_dict(status, ['id', 'content', 'created_at', 'url', 'media_attachments', 'card'])
-    clean['account'] = clean_author(status['account'])
-    clean['content'] = markdown.markdown("<section markdown='block'>"+ clean['content'] +"</section>", extensions=['md_in_html'])
-    for emoji in status['emojis']:
-        clean['content'] = clean['content'].replace(":" + emoji['shortcode'] + ":", '<img alt="' + emoji['shortcode'] + ' emoji" class="emoji" src="'+emoji['url']+'" />')
-    return clean
-
-def clean_dict(dict, keys):
-    return {k: dict[k] for k in keys}
-
-
-def clean_html(raw_html):
-    cleaner = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
-    return re.sub(cleaner, '', raw_html)
 

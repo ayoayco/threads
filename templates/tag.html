@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ app.title }}</title>
+  <title>{{ app.title }} / {{ tag }}</title>
   <meta name="theme-color" content="#3054bf">
   {% if threads|length == 1 %}
   <meta name="description" content="{{ threads[0].summary }}" />
@@ -16,7 +16,7 @@
   <meta name="author" content="{{ attribution.owner }}" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="{{ app.site_name }}" />
-  <meta property="og:title" content="{{ app.title }}" />
+  <meta property="og:title" content="{{ app.title }} / {{ tag }}" />
 
   <script type="module">
     import TimeAgo from 'https://esm.sh/v135/@github/relative-time-element@4.4.0'
@@ -82,12 +82,6 @@
       gap: 1em;
     }
 
-    main.home {
-      & .back {
-        display: none
-      }
-    }
-
     main.thread {
       & .card:not(:last-of-type) .card_avatar::after {
         content: " ";
@@ -96,6 +90,28 @@
         border-right: 2px solid rgba(34, 34, 34, 0.15);
         width: 26px;
         margin-top: -8px;
+      }
+    }
+
+    .pill {
+      border-radius: 2em;
+      background-color: rgba(197, 209, 222, 0.25);
+      margin: 0 0.5em 0.5em 0;
+      padding: 1em;
+      display: inline-block;
+      font-size: var(--font-size-sm);
+      color: var(--text-color-dark);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--color-link);
+      }
+
+      & .pill-label {
+        background-color: rgba(0, 0, 0, 0.15);
+        border-radius: 0.5em;
+        padding: 0 0.25em;
+        margin-right: 0.25em;
       }
     }
 
@@ -267,6 +283,15 @@
           }
         }
       }
+
+      .pill {
+        background-color: rgba(0, 0, 0, 0.15);
+        color: var(--text-color-light-faded);
+
+        &:hover {
+          color: var(--color-brand-complement);
+        }
+      }
     }
   </style>
 </head>
@@ -275,10 +300,37 @@
   <a id="top"></a>
   <header>
     {% include "nav.html" %}
-    <h1>{{ app.title }} / #{{ tag }}</h1>
+    <h1>{{ app.title }} / {{ tag }}</h1>
     <p>{{ app.description }}</p>
   </header>
-  <main>tag</main>
+  <main class={{ "thread" if threads|length==1 else "home" }}>
+    {% if tags is defined%}
+    <div class="featured-tags">
+      {% for tag in tags %}
+      <a class="pill" href="{{ tag.url }}">
+        <span class="pill-label">{{ tag.statuses_count }}</span>
+        {{ tag.name }}
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="back">
+      <a href="{{url_for('threads.home')}}">Back</a>
+    </div>
+    {% for thread in threads %}
+    {% with is_tag=tag!=None, thread=thread, parent_id=thread.id, is_thread=threads|length > 1 %}
+    {% include "card.html" %}
+    {% endwith %}
+    {% if thread.descendants is defined %}
+    {% for descendant in thread.descendants %}
+    {% with is_tag=tag!=None, thread=descendant, parent_id=thread.id %}
+    {% include "card.html" %}
+    {% endwith %}
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+    <a href="#top">Top</a>
+  </main>
   <footer>
     <p>
       Copyright &copy;

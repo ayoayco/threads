@@ -1,4 +1,18 @@
 from mastodon import Mastodon
+from . import utils
+
+
+def get_account_tagged_statuses(app, tag):
+    mastodon = initialize_client(app)
+    account = mastodon.me()
+    print('>>> account id', account.id)
+    statuses = []
+    try:
+        statuses = mastodon.account_statuses(id=account.id, tagged=tag)
+    except:
+        print('>>> failed to fetch statuses', tag)
+
+    return list(map(lambda x: utils.clean_status(x), statuses))
 
 def initialize_client(app):
     mastodon = None
@@ -30,5 +44,5 @@ def initialize_client(app):
         app['password'],
         to_file = app['secret_file']
     )
-
+ 
     return mastodon

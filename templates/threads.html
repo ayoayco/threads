@@ -114,6 +114,7 @@
       }
 
       & .pill-label {
+        font-weight: bold;
         background-color: rgba(0, 0, 0, 0.15);
         border-radius: 0.5em;
         padding: 0 0.25em;
@@ -314,7 +315,7 @@
     {% if tags is defined%}
     <div class="featured-tags">
       {% for tag in tags %}
-      <a class="pill" href="{{ tag.url }}">
+      <a class="pill" href="/tag/{{ tag.name }}">
         <span class="pill-label">{{ tag.statuses_count }}</span>
         {{ tag.name }}
       </a>
