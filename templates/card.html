@@ -1,73 +1,57 @@
+<article class="card">
+  <div class="card_avatar">
+    {% if thread.account.avatar is defined %}
+    <img class="avatar" src="{{ thread.account.avatar }}" alt="avatar of {{ thread.account.display_name }}"
+      title="avatar of {{ thread.account.display_name }}" />
+    {% endif %}
+  </div>
 
-        <article class="card">
-          <div class="card_avatar">
-            {% if thread.account.avatar is defined %}
-            <img class="avatar" src="{{ thread.account.avatar }}"
-              alt="avatar of {{ thread.account.display_name }}"
-              title="avatar of {{ thread.account.display_name }}" />
-            {% endif %}
-          </div>
+  <div class="card_content" id="{{ thread.id }}">
+    <div class="heading">
+      <h2 class="author" rel="author">
+        {{thread.account.display_name | safe}}
+      </h2>
 
-          <div class="card_content" id="{{ thread.id }}">
-            <div class="heading">
-              <h2 class="author" rel="author">
-                {{thread.account.display_name | safe}}
-              </h2>
+      <div class="right_menu">
+        <a href="{{ thread.url }}" title="{{ thread.created_at }}">
+          <relative-time datetime="{{ thread.created_at }}" precision="day">{{ thread.created_at }}</relative-time>
+        </a>
+        <span>&middot;</span>
+        <a href="{{ url_for('threads.thread', id=parent_id) + '#' + thread['id'] }}">Anchor</a>
+      </div>
+    </div>
 
-              <div class="right_menu">
-                <a href="{{ thread.url }}" title="{{ thread.created_at }}">
-                  <relative-time datetime="{{ thread.created_at }}" precision="day">{{ thread.created_at }}</relative-time>
-                </a>
-                <span>&middot;</span>
-                <a href="{{ url_for('threads.thread', id=parent_id) + '#' + thread['id'] }}">Anchor</a>
-              </div>
-            </div>
+    <div class="body">
+      {{thread.content | safe}}
+      {% for media in thread.media_attachments %}
+      {% if media.type == 'image'%}
+      <a href="{{ media.url }}">
+        <img class="media" width="{{ media.meta.small.width }}" height="{{ media.meta.small.height }}"
+          src="{{media.preview_url}}" alt="{{ media.description or 'media attachment' }}"
+          title="{{ media.description or 'media attachment' }}" />
+      </a>
+      {% elif media.type == 'gifv' %}
+      <video class="media" controls autoplay="autoplay" muted loop alt="{{ media.description or 'media attachment' }}"
+        title="{{ media.description or 'media attachment' }}">
+        <source src="{{media.url}}" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      {% endif %}
+      {% endfor %}
+      {% if thread.media_attachments|length <= 0 and thread.card %} <a href="{{ thread.card.url }}">
+        <div class="link_card">
+          <small>
+            {{ thread.card.provider_name or
+            thread.card.provider_url }}
+          </small>
+          <strong>{{ thread.card.title }}</strong>
+          <small>{{thread.card.description}}</small>
+        </div>
+        </a>
+        {% endif %}
 
-            <div class="body">
-              {{thread.content | safe}}
-                {% for media in thread.media_attachments %}
-                  {% if media.type == 'image'%}
-                    <a href="{{ media.url }}">
-                      <img
-                        class="media"
-                        width="{{ media.meta.small.width }}"
-                        height="{{ media.meta.small.height }}"
-                        src="{{media.preview_url}}"
-                        alt="{{ media.description or 'media attachment' }}"
-                        title="{{ media.description or 'media attachment' }}"
-                      />
-                    </a>
-                    {% elif media.type == 'gifv' %}
-                    <video
-                      class="media"
-                      controls
-                      autoplay="autoplay"
-                      muted
-                      loop
-                      alt="{{ media.description or 'media attachment' }}"
-                      title="{{ media.description or 'media attachment' }}"
-                    >
-                      <source src="{{media.url}}" type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                    {% endif %}
-                {% endfor %}
-                {% if thread.media_attachments|length <= 0 and thread.card %}
-                  <a href="{{ thread.card.url }}">
-                    <div class="link_card">
-                      <small>
-                        {{ thread.card.provider_name or
-                        thread.card.provider_url }}
-                      </small>
-                      <strong>{{ thread.card.title }}</strong>
-                      <small>{{thread.card.description}}</small>
-                    </div>
-                  </a>
-                {% endif %}
-
-            </div>
-           {% if is_thread %}
-              <a href="{{ url_for('threads.thread', id=thread.id) }}">Read full thread</a>
-           {% endif %}
-          </article>
-
+    </div>
+    {% if is_thread %}
+    <a href="{{ url_for('threads.thread', id=thread.id) }}">Read full thread</a>
+    {% endif %}
+</article>

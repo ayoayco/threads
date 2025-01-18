@@ -1,283 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ app.title }}</title>
-    <meta name="theme-color" content="#3054bf">
-    {% if threads|length == 1 %}
-    <meta name="description" content="{{ threads[0].summary }}" />
-    <meta property="og:description" content="{{ threads[0].summary }}" />
-    {% else %}
-    <meta name="description" content="{{ app.description  }}" />
-    <meta property="og:description" content="{{ app.description }}" />
-    {% endif %}
-    <meta name="author" content="{{ attribution.owner }}" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="{{ app.site_name }}" />
-    <meta property="og:title" content="{{ app.title }}" />
 
-    <script type="module">
-      import TimeAgo from 'https://esm.sh/v135/@github/relative-time-element@4.4.0'
-    </script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ app.title }}</title>
+  <meta name="theme-color" content="#3054bf">
+  {% if threads|length == 1 %}
+  <meta name="description" content="{{ threads[0].summary }}" />
+  <meta property="og:description" content="{{ threads[0].summary }}" />
+  {% else %}
+  <meta name="description" content="{{ app.description  }}" />
+  <meta property="og:description" content="{{ app.description }}" />
+  {% endif %}
+  <meta name="author" content="{{ attribution.owner }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="{{ app.site_name }}" />
+  <meta property="og:title" content="{{ app.title }}" />
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}" />
-    <style>
-      html {
-        scroll-behavior: smooth;
+  <script type="module">
+    import TimeAgo from 'https://esm.sh/v135/@github/relative-time-element@4.4.0'
+  </script>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}" />
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      color: var(--text-color-dark);
+      font-size: var(--font-size-base);
+      display: grid;
+      padding: 0 1em;
+      gap: 1em;
+
+      a {
+        color: var(--color-link);
       }
-      body {
-        font-family: system-ui, sans-serif;
-        max-width: 600px;
-        margin: 0 auto;
-        color: var(--text-color-dark);
-        font-size: var(--font-size-base);
-        display: grid;
-        padding: 0 1em;
-        gap: 1em;
 
-        a {
-          color: var(--color-link);
-        }
-
-        small {
-          font-size: var(--font-size-sm);
-        }
+      small {
+        font-size: var(--font-size-sm);
       }
-      header, footer {
-        background: var(--ayo-gradient);
+    }
+
+    header,
+    footer {
+      background: var(--ayo-gradient);
+      color: var(--text-color-light);
+      border-radius: 5px;
+      padding: 1em;
+      text-wrap: balance;
+
+      & a {
         color: var(--text-color-light);
-        border-radius: 5px;
-        padding: 1em;
-        text-wrap: balance;
+      }
+    }
 
-        & a {
-          color: var(--text-color-light);
+    footer {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    main {
+      display: grid;
+      gap: 1em;
+    }
+
+    main.home {
+      & .back {
+        display: none
+      }
+    }
+
+    main.thread {
+      & .card:not(:last-of-type) .card_avatar::after {
+        content: " ";
+        display: block;
+        height: 100%;
+        border-right: 2px solid rgba(34, 34, 34, 0.15);
+        width: 26px;
+        margin-top: -8px;
+      }
+    }
+
+    .card_avatar img {
+      border: 2px solid rgba(197, 209, 222, 0.15);
+      border-radius: 50%;
+      display: inline;
+      width: 50px;
+    }
+
+    .card {
+      grid-template-columns: 55px auto;
+      display: grid;
+      gap: 5px;
+    }
+
+    .card_content {
+
+      & .invisible {
+        display: none;
+      }
+
+      & .emoji {
+        display: inline;
+        height: calc(1rem + 6px);
+        margin-bottom: -4px;
+      }
+
+      & .ellipsis::after {
+        content: '...'
+      }
+
+      & .body {
+
+        & code {
+          font-size: var(--font-size-sm);
+          background: rgb(245, 242, 240);
+          padding: 0.25em 0.3em;
+          border-radius: 5px;
+          display: inline;
+          vertical-align: text-bottom;
+        }
+
+        & a:has(.link_card) {
+          text-decoration: none
+        }
+
+        & .media,
+        & .link_card {
+          border: 1px solid rgba(34, 34, 34, 0.15);
+          border-radius: 5px;
+          box-shadow: 5px 25px 10px -25px rgba(34, 34, 34, 0.15);
+          max-width: 100%;
+          margin: 15px 0 1em;
+          object-fit: contain;
+          height: auto;
+          text-decoration: none;
+          text-wrap: balance;
+        }
+
+        & .media:hover,
+        & .link_card:hover {
+          color: var(--color-link);
+          text-decoration-color: var(--color-link);
+          border-color: var(--color-link);
+        }
+
+        & p {
+          margin-bottom: 1em;
         }
       }
 
-      footer {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-      }
+      & .heading {
 
-      main {
         display: grid;
-        gap: 1em;
+        grid-template-columns: auto auto;
+        gap: 5px;
+        height: 20px;
+
+        & .author {
+          font-size: var(--font-size-lg)
+        }
+
+        & .right_menu {
+          font-size: var(--font-size-sm);
+          text-align: right;
+
+          & a,
+          & span {
+            line-height: 36px;
+          }
+
+          & a {
+            color: var(--text-color-dark);
+
+            &:hover {
+              color: var(--color-link);
+            }
+          }
+        }
+
       }
 
-      main.home {
-        & .back {
-          display: none
+      & .link_card {
+        color: var(--text-color-dark-faded);
+        text-decoration: underline;
+        text-decoration-color: var(--text-color-light-faded);
+
+        & strong,
+        & small {
+          text-decoration-thickness: 1px;
+          display: block;
         }
+
+        padding: 1rem;
+      }
+    }
+
+
+    @media (prefers-color-scheme: dark) {
+
+      html,
+      body {
+        background: var(--bg-darker);
+        color: var(--text-color-light);
+      }
+
+      main a {
+        color: var(--color-brand-complement);
       }
 
       main.thread {
         & .card:not(:last-of-type) .card_avatar::after {
-          content: " ";
-          display: block;
-          height: 100%;
-          border-right: 2px solid rgba(34, 34, 34, 0.15);
-          width: 26px;
-          margin-top: -8px;
+          border-right: 2px solid rgba(197, 209, 222, 0.15);
         }
-      }
-
-      .card_avatar img {
-        border: 2px solid rgba(197, 209, 222, 0.15);
-        border-radius: 50%;
-        display: inline;
-        width: 50px;
-      }
-
-      .card {
-        grid-template-columns: 55px auto;
-        display: grid;
-        gap: 5px;
       }
 
       .card_content {
-
-        & .invisible {
-          display: none;
+        & .action {
+          color: var(--color-brand-complement);
         }
 
-        & .emoji {
-          display: inline;
-          height: calc(1rem + 6px);
-          margin-bottom: -4px;
-        }
+        & .heading .right_menu a {
+          color: var(--text-color-light);
 
-        & .ellipsis::after {
-          content: '...'
+          &:hover {
+            color: var(--color-brand-complement);
+          }
         }
 
         & .body {
-
-          & code {
-            font-size: var(--font-size-sm);
-            background: rgb(245, 242, 240);
-            padding: 0.25em 0.3em;
-            border-radius: 5px;
-            display: inline;
-            vertical-align: text-bottom;
+          code {
+            background: rgb(45, 51, 59);
+            color: rgb(197, 209, 222);
           }
 
-          & a:has(.link_card) {
-            text-decoration: none
+          & .media,
+          & .link_card {
+            border: 1px solid rgba(197, 209, 222, 0.15);
+            color: var(--text-color-light-faded);
+            background: var(--bg-dark);
           }
 
-          & .media, & .link_card {
-            border: 1px solid rgba(34, 34, 34, 0.15);
-            border-radius: 5px;
-            box-shadow: 5px 25px 10px -25px rgba(34, 34, 34, 0.15);
-            max-width: 100%;
-            margin: 15px 0 1em;
-            object-fit: contain;
-            height: auto;
-            text-decoration: none;
-            text-wrap: balance;
-          }
-
-          & .media:hover, & .link_card:hover {
-            color: var(--color-link);
-            text-decoration-color: var(--color-link);
-            border-color: var(--color-link);
-          }
-
-          & p {
-            margin-bottom: 1em;
-          }
-        }
-
-        & .heading {
-
-          display: grid;
-          grid-template-columns: auto auto;
-          gap: 5px;
-          height: 20px;
-
-          & .author {
-            font-size: var(--font-size-lg)
-          }
-
-          & .right_menu {
-            font-size: var(--font-size-sm);
-            text-align:right;
-
-            & a, & span {
-              line-height: 36px;
-            }
-
-            & a{
-              color: var(--text-color-dark);
-
-              &:hover {
-                color: var(--color-link);
-              }
-            }
-          }
-
-        }
-
-        & .link_card {
-          color: var(--text-color-dark-faded);
-          text-decoration: underline;
-          text-decoration-color: var(--text-color-light-faded);
-
-          & strong, & small {
-            text-decoration-thickness: 1px;
-            display: block;
-          }
-
-          padding: 1rem;
-        }
-      }
-
-
-      @media (prefers-color-scheme: dark) {
-        html, body {
-            background: var(--bg-darker);
-            color: var(--text-color-light);
-        }
-        main a {
+          & .media:hover,
+          & .link_card:hover {
             color: var(--color-brand-complement);
-        }
-
-        main.thread {
-          & .card:not(:last-of-type) .card_avatar::after {
-            border-right: 2px solid rgba(197, 209, 222, 0.15);
+            text-decoration-color: var(--color-brand-complement);
+            border-color: var(--color-brand-complement);
           }
         }
-        .card_content {
-            & .action {
-              color: var(--color-brand-complement);
-            }
-            & .heading .right_menu a{
-              color: var(--text-color-light);
-
-              &:hover {
-                color: var(--color-brand-complement);
-              }
-            }
-            & .body {
-                code {
-                  background: rgb(45, 51, 59);
-                  color: rgb(197, 209, 222);
-                }
-                & .media, & .link_card {
-                  border: 1px solid rgba(197, 209, 222, 0.15);
-                  color: var(--text-color-light-faded);
-                  background: var(--bg-dark);
-                }
-                & .media:hover, & .link_card:hover {
-                  color: var(--color-brand-complement);
-                  text-decoration-color: var(--color-brand-complement);
-                  border-color:  var(--color-brand-complement);
-                }
-            }
-        }
       }
-    </style>
-  </head>
-  <body>
-    <a id="top"></a>
-    <header>
-      <nav><a href="/">Go home</a></nav>
-      <h1>{{ app.title }}</h1>
-      <p>{{ app.description }}</p>
-    </header>
-    <main class={{ "thread" if threads|length == 1 else "home" }}>
-      <div class="back">
-        <a href="{{url_for('threads.home')}}">Back</a>
-      </div>
-        {% for thread in threads %}
-          {% with thread=thread, parent_id=thread.id, is_thread=threads|length > 1 %}
-            {% include "card.html" %}
-          {% endwith %}
-          {% if thread.descendants is defined %}
-            {% for descendant in thread.descendants %}
-              {% with thread=descendant, parent_id=thread.id %}
-                {% include "card.html" %}
-              {% endwith %}
-            {% endfor %}
-          {% endif %}
-        {% endfor %}
-      <a href="#top">Top</a>
-    </main>
-    <footer>
-      <p>
-        Copyright &copy;
-        {% if attribution.current_year %}
-          {{ attribution.year}}-{{ attribution.current_year }}
-        {% else %}
-          {{ attribution.year}}
-        {% endif %}
-        {{ attribution.owner }}
-      </p>
-      <p>Powered by <a href="https://ayco.io/sh/threads">/threads</a></p>
-      <p>Rendered on {{ render_date }} in Europe/Amsterdam</p>
-    </footer>
-  </body>
+    }
+  </style>
+</head>
+
+<body>
+  <a id="top"></a>
+  <header>
+    {% include "nav.html" %}
+    <h1>{{ app.title }}</h1>
+    <p>{{ app.description }}</p>
+  </header>
+  <main class={{ "thread" if threads|length==1 else "home" }}>
+    <div class="back">
+      <a href="{{url_for('threads.home')}}">Back</a>
+    </div>
+    {% for thread in threads %}
+    {% with thread=thread, parent_id=thread.id, is_thread=threads|length > 1 %}
+    {% include "card.html" %}
+    {% endwith %}
+    {% if thread.descendants is defined %}
+    {% for descendant in thread.descendants %}
+    {% with thread=descendant, parent_id=thread.id %}
+    {% include "card.html" %}
+    {% endwith %}
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+    <a href="#top">Top</a>
+  </main>
+  <footer>
+    <p>
+      Copyright &copy;
+      {% if attribution.current_year %}
+      {{ attribution.year}}-{{ attribution.current_year }}
+      {% else %}
+      {{ attribution.year}}
+      {% endif %}
+      {{ attribution.owner }}
+    </p>
+    <p>
+      Powered by <a href="https://ayco.io/sh/threads">/threads</a>
+    </p>
+    <p>Rendered on {{ render_date }} in Europe/Amsterdam</p>
+  </footer>
+
+</body>
+
 </html>
