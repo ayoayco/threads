@@ -89,10 +89,6 @@
     }
 
     main.thread {
-      & h2.threads-title {
-        display: none
-      }
-
       & .card:not(:last-of-type) .card_avatar::after {
         content: " ";
         display: block;
@@ -100,6 +96,24 @@
         border-right: 2px solid rgba(34, 34, 34, 0.15);
         width: 26px;
         margin-top: -8px;
+      }
+    }
+
+    .pill {
+      border-radius: 0.5em;
+      background-color: rgba(197, 209, 222, 0.5);
+      margin: 0 0.5em 0.5em 0;
+      padding: 0.5em;
+      display: inline-block;
+      font-size: var(--font-size-sm);
+      color: var(--text-color-dark);
+      text-decoration: none;
+
+      & .pill-label {
+        background-color: rgba(0, 0, 0, 0.15);
+        border-radius: 0.5em;
+        padding: 0 0.25em;
+        margin-right: 0.25em;
       }
     }
 
@@ -271,6 +285,11 @@
           }
         }
       }
+
+      .pill {
+        background-color: rgba(0, 0, 0, 0.15);
+        color: var(--text-color-light-faded);
+      }
     }
   </style>
 </head>
@@ -286,18 +305,17 @@
   <main class={{ "thread" if threads|length==1 else "home" }}>
     {% if tags is defined%}
     <div class="featured-tags">
-      <h2>Featured tags:</h2>
-      <ul class="tags">
-        {% for tag in tags %}
-        <li><a href="{{ tag.url }}">#{{ tag.name }} ({{ tag.statuses_count }})</a> • </li>
-        {% endfor %}
-      </ul>
+      {% for tag in tags %}
+      <a class="pill" href="{{ tag.url }}">
+        <span class="pill-label">{{ tag.statuses_count }}</span>
+        {{ tag.name }}
+      </a>
+      {% endfor %}
     </div>
     {% endif %}
     <div class="back">
       <a href="{{url_for('threads.home')}}">Back</a>
     </div>
-    <h2 class="threads-title">Featured threads:</h2>
     {% for thread in threads %}
     {% with thread=thread, parent_id=thread.id, is_thread=threads|length > 1 %}
     {% include "card.html" %}
