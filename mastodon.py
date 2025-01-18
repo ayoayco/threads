@@ -5,10 +5,13 @@ from . import utils
 def get_account_tagged_statuses(app, tag):
     mastodon = initialize_client(app)
     account = mastodon.me()
-    print('>>> account id', account.id)
     statuses = []
     try:
-        statuses = mastodon.account_statuses(id=account.id, tagged=tag)
+        statuses = mastodon.account_statuses(
+            id=account.id,
+            tagged=tag,
+            exclude_reblogs=True
+        )
     except:
         print('>>> failed to fetch statuses', tag)
 
