@@ -93,12 +93,11 @@
       }
     }
 
-    .pill,
-    .hashtag {
+    .pill {
       border-radius: 2em;
       background-color: rgba(197, 209, 222, 0.25);
-      margin: 0 0.5em 0.5em 0;
-      padding: 1em;
+      margin-bottom: 0.5em;
+      padding: 0.5em 1em;
       display: inline-block;
       font-size: var(--font-size-sm);
       color: var(--text-color-dark);
@@ -285,8 +284,7 @@
         }
       }
 
-      .pill,
-      .hashtag {
+      .pill {
         background-color: rgba(0, 0, 0, 0.15);
         color: var(--text-color-light-faded);
 
@@ -307,25 +305,20 @@
   </header>
   <main class={{ "thread" if threads|length==1 else "home" }}>
     {% if tags is defined%}
-    <div class="featured-tags">
-      {% for tag in tags %}
-      <a class="pill" href="{{ tag.url }}">
-        <span class="pill-label">{{ tag.statuses_count }}</span>
-        {{ tag.name }}
-      </a>
-      {% endfor %}
-    </div>
+    {% with tags=tags %}
+    {% include "tags.html" %}
+    {% endwith %}
     {% endif %}
     <div class="back">
       <a href="{{url_for('threads.home')}}">Back</a>
     </div>
     {% for thread in threads %}
-    {% with is_tag=tag!=None, thread=thread, parent_id=thread.id, is_thread=threads|length > 1 %}
+    {% with is_tag=tag!=None, thread=thread, parent_id=thread.id, is_thread=threads|length > 1, server=app.server %}
     {% include "card.html" %}
     {% endwith %}
     {% if thread.descendants is defined %}
     {% for descendant in thread.descendants %}
-    {% with is_tag=tag!=None, thread=descendant, parent_id=thread.id %}
+    {% with is_tag=tag!=None, thread=descendant, parent_id=thread.id, server=app.server%}
     {% include "card.html" %}
     {% endwith %}
     {% endfor %}
@@ -348,7 +341,8 @@
     </p>
     <p>Rendered on {{ render_date }} in Europe/Amsterdam</p>
   </footer>
-
+  <script type="module" src="{{ url_for('static', filename='enhance-content.js') }}">
+  </script>
 </body>
 
 </html>

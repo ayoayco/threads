@@ -1,0 +1,8 @@
+<div class="featured-tags">
+    {% for tag in tags %}
+    <a class="pill" href="{{url_for('threads.tag', id=tag.name) }}">
+        <span class="pill-label">{{ tag.statuses_count }}</span>
+        {{ tag.name }}
+    </a>
+    {% endfor %}
+</div>
