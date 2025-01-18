@@ -99,7 +99,8 @@
       }
     }
 
-    .pill {
+    .pill,
+    .hashtag {
       border-radius: 2em;
       background-color: rgba(197, 209, 222, 0.25);
       margin: 0 0.5em 0.5em 0;
@@ -291,7 +292,8 @@
         }
       }
 
-      .pill {
+      .pill,
+      .hashtag {
         background-color: rgba(0, 0, 0, 0.15);
         color: var(--text-color-light-faded);
 
@@ -317,7 +319,7 @@
       {% for tag in tags %}
       <a class="pill" href="{{url_for('threads.tag', id=tag.name) }}">
         <span class="pill-label">{{ tag.statuses_count }}</span>
-        {{ tag.name }}
+        #{{ tag.name }}
       </a>
       {% endfor %}
     </div>
