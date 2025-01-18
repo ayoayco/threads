@@ -74,8 +74,16 @@ async def tag(id):
     attribution = get_attribution()
     app = get_app_config()
     statuses = mastodon.get_account_tagged_statuses(app, id)
+    tags = []
 
-    return render_template('tag.html', threads=statuses, tag=id, app=app, attribution=attribution, render_date=datetime.now())
+    masto = mastodon.initialize_client(app)
+
+    # List featured hashtags
+    tags = masto.featured_tags()
+
+
+
+    return render_template('tag.html', threads=statuses, tag=id, app=app, tags=tags, attribution=attribution, render_date=datetime.now())
 
 
 @threads.route('/<path:id>')
