@@ -6,10 +6,9 @@ import re
 from .cache import cache
 import asyncio
 import aiohttp
-from mastodon import Mastodon
+from . import mastodon
 
 threads = Blueprint('threads', __name__, template_folder='templates')
-mastodon = None
 
 # TODO: move following to an app config or sqlite #########
 thread_ids = [
@@ -63,10 +62,10 @@ async def home():
     app = get_app_config()
     tags = []
 
-    mastodon = await initialize_client(app)
+    masto = mastodon.initialize_client(app)
 
     # List featured hashtags
-    tags = mastodon.featured_tags()
+    tags = masto.featured_tags()
 
     return render_template('threads.html', threads=statuses, tags=tags, app=app, attribution=attribution, render_date=datetime.now())
 
@@ -169,36 +168,3 @@ def clean_html(raw_html):
     cleaner = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
     return re.sub(cleaner, '', raw_html)
 
-
-async def initialize_client(app):
-    global mastodon
-    secret = None
-    try:
-        secret_file = open(app['secret_file'], 'r')
-        secret = secret_file.read()
-    except OSError as e:
-        print('>>> No secret found.')
-
-    # todo, check if access_token exist in secret_file
-    if secret == None:
-        #...if token does not exist, create app:
-        Mastodon.create_app(
-            app['site_name'],
-            api_base_url = app['server'],
-            to_file = app['secret_file']
-        )
-        mastodon = Mastodon(client_id=app['secret_file'])
-        print('>>> Persisted new token!')
-
-    else:
-        #... otherwise, reuse
-        mastodon = Mastodon(access_token=app['secret_file'])
-        print('>>> Reused persisted token!')
- 
-    mastodon.log_in(
-        app['user'],
-        app['password'],
-        to_file = app['secret_file']
-    )
-
-    return mastodon
