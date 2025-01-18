@@ -282,7 +282,7 @@
   <main class={{ "thread" if threads|length==1 else "home" }}>
     {% if tags is defined%}
     <div class="featured-tags">
-      <strong>Featured tags:</strong>
+      <h2>Featured tags:</h2>
       <ul class="tags">
         {% for tag in tags %}
         <li><a href="{{ tag.url }}">#{{ tag.name }} ({{ tag.statuses_count }})</a> • </li>
@@ -293,22 +293,20 @@
     <div class="back">
       <a href="{{url_for('threads.home')}}">Back</a>
     </div>
-    <div>
-      <strong>Featured threads:</strong>
-      {% for thread in threads %}
-      {% with thread=thread, parent_id=thread.id, is_thread=threads|length > 1 %}
-      {% include "card.html" %}
-      {% endwith %}
-      {% if thread.descendants is defined %}
-      {% for descendant in thread.descendants %}
-      {% with thread=descendant, parent_id=thread.id %}
-      {% include "card.html" %}
-      {% endwith %}
-      {% endfor %}
-      {% endif %}
-      {% endfor %}
-      <a href="#top">Top</a>
-    </div>
+    <h2>Featured threads:</h2>
+    {% for thread in threads %}
+    {% with thread=thread, parent_id=thread.id, is_thread=threads|length > 1 %}
+    {% include "card.html" %}
+    {% endwith %}
+    {% if thread.descendants is defined %}
+    {% for descendant in thread.descendants %}
+    {% with thread=descendant, parent_id=thread.id %}
+    {% include "card.html" %}
+    {% endwith %}
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+    <a href="#top">Top</a>
   </main>
   <footer>
     <p>
