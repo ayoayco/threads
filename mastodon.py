@@ -1,6 +1,7 @@
 from mastodon import Mastodon
 from . import utils
 
+session_id = None
 
 def get_account_tagged_statuses(app, tag):
     mastodon = initialize_client(app)
@@ -18,6 +19,7 @@ def get_account_tagged_statuses(app, tag):
     return list(map(lambda x: utils.clean_status(x), statuses))
 
 def initialize_client(app):
+    global session_id
     mastodon = None
     secret = None
     try:
@@ -34,18 +36,31 @@ def initialize_client(app):
             api_base_url = app['server'],
             to_file = app['secret_file']
         )
-        mastodon = Mastodon(client_id=app['secret_file'])
-        print('>>> Persisted new token!')
+        try:
+            mastodon = Mastodon(client_id=app['secret_file'])
+            print('>>> Persisted new token!')
+        except:
+            message = '>>> Failed to create masto client token'
+            raise Exception(message)
 
     else:
         #... otherwise, reuse
         mastodon = Mastodon(access_token=app['secret_file'])
         print('>>> Reused persisted token!')
  
-    mastodon.log_in(
-        app['user'],
-        app['password'],
-        to_file = app['secret_file']
-    )
+    if session_id == None:
+        try:
+            session_id = mastodon.log_in(
+                app['user'],
+                app['password'],
+                to_file = app['secret_file']
+            )
+            print('>>> Logged in: ', session_id)
+        except:
+            message = '>>> Failed to get mastodon session'
+            raise Exception(message)
+    else:
+        print('>>> Reused session: ', session_id)
+
  
     return mastodon
