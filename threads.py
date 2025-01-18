@@ -67,7 +67,6 @@ async def home():
 
     # List featured hashtags
     tags = mastodon.featured_tags()
-    print(tags)
 
     return render_template('threads.html', threads=statuses, tags=tags, app=app, attribution=attribution, render_date=datetime.now())
 
