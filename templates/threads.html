@@ -100,14 +100,18 @@
     }
 
     .pill {
-      border-radius: 0.5em;
-      background-color: rgba(197, 209, 222, 0.5);
+      border-radius: 2em;
+      background-color: rgba(197, 209, 222, 0.25);
       margin: 0 0.5em 0.5em 0;
-      padding: 0.5em;
+      padding: 1em;
       display: inline-block;
       font-size: var(--font-size-sm);
       color: var(--text-color-dark);
       text-decoration: none;
+
+      &:hover {
+        color: var(--color-link);
+      }
 
       & .pill-label {
         background-color: rgba(0, 0, 0, 0.15);
@@ -289,6 +293,10 @@
       .pill {
         background-color: rgba(0, 0, 0, 0.15);
         color: var(--text-color-light-faded);
+
+        &:hover {
+          color: var(--color-brand-complement);
+        }
       }
     }
   </style>
