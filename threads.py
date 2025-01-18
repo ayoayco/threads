@@ -6,6 +6,7 @@ import re
 from .cache import cache
 import asyncio
 import aiohttp
+from mastodon import Mastodon
 
 threads = Blueprint('threads', __name__, template_folder='templates')
 
@@ -59,7 +60,34 @@ async def home():
     statuses = await fetch_statuses()
     attribution = get_attribution()
     app = get_app_config()
+
+    Mastodon.create_app(
+        app['site_name'],
+        api_base_url = app['server'],
+        to_file = app['secret_file']
+    )
+
+    mastodon = Mastodon(client_id = app['secret_file'],)
+    mastodon.log_in(
+        app['user'],
+        app['password'],
+        to_file = app['secret_file']
+    )
+
+    response = mastodon.toot('Post from https://ayco.io/threads using mastodon.py!')
+    print('>>> ' + response.url)
+
     return render_template('threads.html', threads=statuses, app=app, attribution=attribution, render_date=datetime.now())
+
+
+@threads.route('/new')
+@cache.cached(timeout=300)
+async def new():
+    attribution = get_attribution()
+    app = get_app_config()
+    return render_template('new.html', app=app, attribution=attribution, render_date=datetime.now())
+
+
 
 @threads.route('/<path:id>')
 @cache.cached(timeout=300)

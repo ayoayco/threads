@@ -3,3 +3,5 @@ requests
 markdown
 Flask-Caching
 aiohttp
+
+mastodon-py
