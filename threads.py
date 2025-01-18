@@ -9,6 +9,7 @@ import aiohttp
 from mastodon import Mastodon
 
 threads = Blueprint('threads', __name__, template_folder='templates')
+mastodon = None
 
 # TODO: move following to an app config or sqlite #########
 thread_ids = [
@@ -60,33 +61,23 @@ async def home():
     statuses = await fetch_statuses()
     attribution = get_attribution()
     app = get_app_config()
+    tags = []
 
-    Mastodon.create_app(
-        app['site_name'],
-        api_base_url = app['server'],
-        to_file = app['secret_file']
-    )
+    mastodon = await initialize_client(app)
 
-    mastodon = Mastodon(client_id = app['secret_file'],)
-    mastodon.log_in(
-        app['user'],
-        app['password'],
-        to_file = app['secret_file']
-    )
+    # List featured hashtags
+    tags = mastodon.featured_tags()
+    print(tags)
 
-    response = mastodon.toot('Post from https://ayco.io/threads using mastodon.py!')
-    print('>>> ' + response.url)
-
-    return render_template('threads.html', threads=statuses, app=app, attribution=attribution, render_date=datetime.now())
+    return render_template('threads.html', threads=statuses, tags=tags, app=app, attribution=attribution, render_date=datetime.now())
 
 
-@threads.route('/new')
+@threads.route('/tag/<path:id>')
 @cache.cached(timeout=300)
-async def new():
+async def tag(id):
     attribution = get_attribution()
     app = get_app_config()
-    return render_template('new.html', app=app, attribution=attribution, render_date=datetime.now())
-
+    return render_template('tag.html', tag=id, app=app, attribution=attribution, render_date=datetime.now())
 
 
 @threads.route('/<path:id>')
@@ -174,8 +165,41 @@ def clean_status(status):
 def clean_dict(dict, keys):
     return {k: dict[k] for k in keys}
 
-CLEANR = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
 
 def clean_html(raw_html):
-    cleantext = re.sub(CLEANR, '', raw_html)
-    return cleantext
+    cleaner = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
+    return re.sub(cleaner, '', raw_html)
+
+
+async def initialize_client(app):
+    global mastodon
+    secret = None
+    try:
+        secret_file = open(app['secret_file'], 'r')
+        secret = secret_file.read()
+    except OSError as e:
+        print('>>> No secret found.')
+
+    # todo, check if access_token exist in secret_file
+    if secret == None:
+        #...if token does not exist, create app:
+        Mastodon.create_app(
+            app['site_name'],
+            api_base_url = app['server'],
+            to_file = app['secret_file']
+        )
+        mastodon = Mastodon(client_id=app['secret_file'])
+        print('>>> Persisted new token!')
+
+    else:
+        #... otherwise, reuse
+        mastodon = Mastodon(access_token=app['secret_file'])
+        print('>>> Reused persisted token!')
+ 
+    mastodon.log_in(
+        app['user'],
+        app['password'],
+        to_file = app['secret_file']
+    )
+
+    return mastodon

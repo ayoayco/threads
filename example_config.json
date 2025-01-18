@@ -2,13 +2,16 @@
   "APPS": {
     "threads": {
       "site_name": "Thoughts",
-      "title":"Thoughts",
+      "title": "Thoughts",
       "description": "Hand-picked public posts from my social feed",
-      "server" : "https://social.ayco.io"
+      "server": "https://social.ayco.io",
+      "user": "user@mastodon.social",
+      "password": "ultraelectromagneticpassword",
+      "secret_file": "threads-masto-client.secret"
     }
   },
   "ATTRIBUTION": {
-      "owner": "Author Name",
-      "year": "2024"
+    "owner": "Author Name",
+    "year": "2024"
   }
 }

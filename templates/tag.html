@@ -275,41 +275,10 @@
   <a id="top"></a>
   <header>
     {% include "nav.html" %}
-    <h1>{{ app.title }}</h1>
+    <h1>{{ app.title }} / #{{ tag }}</h1>
     <p>{{ app.description }}</p>
-
   </header>
-  <main class={{ "thread" if threads|length==1 else "home" }}>
-    {% if tags is defined%}
-    <div class="featured-tags">
-      <strong>Featured tags:</strong>
-      <ul class="tags">
-        {% for tag in tags %}
-        <li><a href="{{ tag.url }}">#{{ tag.name }} ({{ tag.statuses_count }})</a> • </li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-    <div class="back">
-      <a href="{{url_for('threads.home')}}">Back</a>
-    </div>
-    <div>
-      <strong>Featured threads:</strong>
-      {% for thread in threads %}
-      {% with thread=thread, parent_id=thread.id, is_thread=threads|length > 1 %}
-      {% include "card.html" %}
-      {% endwith %}
-      {% if thread.descendants is defined %}
-      {% for descendant in thread.descendants %}
-      {% with thread=descendant, parent_id=thread.id %}
-      {% include "card.html" %}
-      {% endwith %}
-      {% endfor %}
-      {% endif %}
-      {% endfor %}
-      <a href="#top">Top</a>
-    </div>
-  </main>
+  <main>tag</main>
   <footer>
     <p>
       Copyright &copy;
