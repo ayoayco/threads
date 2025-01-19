@@ -2,14 +2,15 @@ from mastodon import Mastodon
 from . import utils
 
 session_id = None
+account_id = None
 
 def get_account_tagged_statuses(app, tag):
+    global account_id
     mastodon = initialize_client(app)
-    account = mastodon.me()
     statuses = []
     try:
         statuses = mastodon.account_statuses(
-            id=account.id,
+            id=account_id,
             tagged=tag,
             exclude_reblogs=True
         )
@@ -20,6 +21,7 @@ def get_account_tagged_statuses(app, tag):
 
 def initialize_client(app):
     global session_id
+    global account_id
     mastodon = None
     secret = None
     try:
@@ -62,5 +64,15 @@ def initialize_client(app):
     else:
         print('>>> Reused session: ', session_id)
 
+    if account_id == None:
+        try:
+            account = mastodon.me()
+            account_id = account.id
+            print('>>> Set account ID: ', account_id)
+        except:
+            message = '>>> Failed to get mastodon account'
+            raise Exception(message)
+    else:
+        print('>>> Reused account ID:', account_id)
  
     return mastodon
