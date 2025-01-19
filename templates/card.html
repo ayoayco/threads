@@ -44,7 +44,7 @@
       {% endif %}
       {% endfor %}
       {% if thread.media_attachments|length <= 0 and thread.card %} <a href="{{ thread.card.url }}">
-        <div class="link_card">
+        <div class="link-card">
           <small>
             {{ thread.card.provider_name or
             thread.card.provider_url }}
