@@ -143,7 +143,7 @@
   <!-- threads specific static css-->
   {% include "styles.html" %}
 
-  {% include "import-map.html" %}
+  <!-- {% include "import-map.html" %} -->
 </head>
 
 <body>
@@ -194,6 +194,11 @@
     </p>
     <p>Rendered on {{ render_date }} in Europe/Amsterdam</p>
   </footer>
+
+  <script type="module">
+    import TimeAgo from "https://esm.sh/v135/@github/relative-time-element@4.4.0/es2022/relative-time.js"
+    customElements.define('relative-time', TimeAgo)
+  </script>
   <script type="module" src="{{ url_for('threads.static', filename='enhance-content.js') }}">
   </script>
 </body>
