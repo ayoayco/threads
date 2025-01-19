@@ -1,3 +1,174 @@
+<style>
+  .card_content {
+
+    & .invisible {
+      display: none;
+    }
+
+    & .emoji {
+      display: inline;
+      height: calc(1rem + 6px);
+      margin-bottom: -4px;
+    }
+
+    & .ellipsis::after {
+      content: '...'
+    }
+
+    & .body {
+
+      .hashtag,
+      .mention {
+        color: var(--text-color-dark-faded);
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      & code {
+        font-size: var(--font-size-sm);
+        background: rgb(245, 242, 240);
+        padding: 0.25em 0.3em;
+        border-radius: 5px;
+        display: inline-block;
+        vertical-align: text-bottom;
+      }
+
+      & a:has(.link_card) {
+        text-decoration: none
+      }
+
+      & .media,
+      & .link_card {
+        border: 1px solid rgba(34, 34, 34, 0.15);
+        border-radius: 5px;
+        box-shadow: 5px 25px 10px -25px rgba(34, 34, 34, 0.15);
+        max-width: 100%;
+        margin: 15px 0 1em;
+        object-fit: contain;
+        height: auto;
+        text-decoration: none;
+        text-wrap: balance;
+      }
+
+      & .media:hover,
+      & .link_card:hover {
+        color: var(--color-link);
+        text-decoration-color: var(--color-link);
+        border-color: var(--color-link);
+      }
+
+      & p {
+        margin-bottom: 1em;
+      }
+    }
+
+    & .heading {
+
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 5px;
+      height: 20px;
+
+      & .author {
+        font-size: var(--font-size-lg)
+      }
+
+      & .right_menu {
+        font-size: var(--font-size-sm);
+        text-align: right;
+
+        & a,
+        & span {
+          line-height: 36px;
+        }
+
+        & a {
+          color: var(--text-color-dark);
+
+          &:hover {
+            color: var(--color-link);
+          }
+        }
+      }
+
+    }
+
+    & .link_card {
+      color: var(--text-color-dark-faded);
+      text-decoration: underline;
+      text-decoration-color: var(--text-color-light-faded);
+
+      & strong,
+      & small {
+        text-decoration-thickness: 1px;
+        display: block;
+      }
+
+      padding: 1rem;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .card_content {
+
+      & .action {
+        color: var(--color-brand-complement);
+      }
+
+      & .heading .right_menu a {
+        color: var(--text-color-light);
+
+        &:hover {
+          color: var(--color-brand-complement);
+        }
+      }
+
+      & .body {
+
+        .hashtag,
+        .mention {
+          color: var(--text-color-light-faded);
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        code {
+          background: rgb(45, 51, 59);
+          color: rgb(197, 209, 222);
+        }
+
+        & .media,
+        & .link_card {
+          border: 1px solid rgba(197, 209, 222, 0.15);
+          color: var(--text-color-light-faded);
+          background: var(--bg-dark);
+        }
+
+        & .media:hover,
+        & .link_card:hover {
+          color: var(--color-brand-complement);
+          text-decoration-color: var(--color-brand-complement);
+          border-color: var(--color-brand-complement);
+        }
+      }
+    }
+
+    .pill {
+      background-color: rgba(0, 0, 0, 0.15);
+      color: var(--text-color-light-faded);
+
+      &:hover {
+        color: var(--color-brand-complement);
+      }
+    }
+  }
+</style>
 <article class="card">
   <div class="card_avatar">
     {% if thread.account.avatar is defined %}
