@@ -18,9 +18,7 @@
   <meta property="og:site_name" content="{{ app.site_name }}" />
   <meta property="og:title" content="{{ app.title }}" />
 
-  <script type="module">
-    import TimeAgo from 'https://esm.sh/v135/@github/relative-time-element@4.4.0'
-  </script>
+  {% include "import-map.html" %}
 
   <!-- Use parent app's variables & reset stylesheets -->
   <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}" />
