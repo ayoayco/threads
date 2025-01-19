@@ -49,6 +49,16 @@
       }
     }
 
+    header {
+      & a.app-title {
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
     header,
     footer {
       background: var(--ayo-gradient);
@@ -312,7 +322,9 @@
   <a id="top"></a>
   <header>
     {% include "nav.html" %}
-    <h1>{{ app.title }}</h1>
+    <a class="app-title" href="{{url_for('threads.home')}}">
+      <h1>{{ app.title }}</h1>
+    </a>
     <p>{{ app.description }}</p>
 
   </header>
