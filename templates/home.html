@@ -319,7 +319,7 @@
   <main class={{ "thread" if threads|length==1 else "home" }}>
     {% if tags is defined%}
     {% with tags=tags %}
-    {% include "tags.html" %}
+    {% include "tag-pills.html" %}
     {% endwith %}
     {% endif %}
     <div class="back">
