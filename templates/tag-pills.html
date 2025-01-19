@@ -1,4 +1,7 @@
 <div class="featured-tags">
+    <div>
+        <strong><small>Featured tags</small></strong>
+    </div>
     {% for tag in tags %}
     <a class="hashtag pill" href="{{url_for('threads.tag', id=tag.name) }}">
         {{ tag.name }}

@@ -18,15 +18,6 @@
   <meta property="og:site_name" content="{{ app.site_name }}" />
   <meta property="og:title" content="{{ app.title }}" />
 
-  {% include "import-map.html" %}
-
-  <!-- Use parent app's variables & reset stylesheets -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}" />
-
-  <!-- threads specific static css-->
-  <link rel="stylesheet" href="{{ url_for('threads.static', filename='pills.css') }}" />
-
   <style>
     html {
       scroll-behavior: smooth;
@@ -39,7 +30,6 @@
       color: var(--text-color-dark);
       font-size: var(--font-size-base);
       display: grid;
-      padding: 0 1em;
       gap: 1em;
 
       a {
@@ -149,6 +139,15 @@
 
     }
   </style>
+
+  <!-- Use parent app's variables & reset stylesheets -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}" />
+
+  <!-- threads specific static css-->
+  {% include "styles.html" %}
+
+  {% include "import-map.html" %}
 </head>
 
 <body>
@@ -168,7 +167,7 @@
     {% endwith %}
     {% endif %}
     <div class="back">
-      <a href="{{url_for('threads.home')}}">Back</a>
+      <a class="btn" href="{{url_for('threads.home')}}">&larr; Back</a>
     </div>
     {% for thread in threads %}
     {% with thread=thread, parent_id=thread.id, is_thread=threads|length > 1, server=app.server %}
@@ -182,7 +181,7 @@
     {% endfor %}
     {% endif %}
     {% endfor %}
-    <a href="#top">Top</a>
+    <a class="btn" href="#top">&uarr; Top</a>
   </main>
   <footer>
     <p>

@@ -1,0 +1,29 @@
+.btn {
+  text-decoration: none;
+  border-radius: 5px;
+  border: 1px solid;
+  color: var(--text-color-dark);
+  border-color: var(--border-color-light);
+  background-color: var(--bg-light);
+  padding: 0.25em 0.5em;
+  font-weight: bold;
+  font-size: var(--font-size-base);
+
+  &:hover {
+    color: var(--color-brand-blue-3);
+    border-color: var(--color-brand-blue-3);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn {
+    color: var(--text-color-light);
+    border-color: var(--border-color-dark);
+    background-color: var(--bg-dark);
+
+    &:hover {
+      color: var(--color-brand-complement);
+      border-color: var(--color-brand-complement);
+    }
+  }
+}
