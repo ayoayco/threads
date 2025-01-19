@@ -114,7 +114,7 @@ article.card {
  */
 
   & .bottom-menu {
-    padding: 1em 0;
+    padding: 0.25em 0 1em;
   }
 }
 
