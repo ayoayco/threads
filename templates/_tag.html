@@ -25,6 +25,10 @@
   <!-- Use parent app's variables & reset stylesheets -->
   <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}" />
+
+  <!-- threads specific static css-->
+  <link rel="stylesheet" href="{{ url_for('threads.static', filename='pills.css') }}" />
+
   <style>
     html {
       scroll-behavior: smooth;
@@ -109,28 +113,6 @@
       }
     }
 
-    .pill {
-      border-radius: 2em;
-      background-color: rgba(197, 209, 222, 0.25);
-      margin-bottom: 0.5em;
-      padding: 0.5em 1em;
-      display: inline-block;
-      font-size: var(--font-size-sm);
-      color: var(--text-color-dark);
-      text-decoration: none;
-
-      &:hover {
-        color: var(--color-link);
-      }
-
-      & .pill-label {
-        background-color: rgba(0, 0, 0, 0.15);
-        border-radius: 0.5em;
-        padding: 0 0.25em;
-        margin-right: 0.25em;
-      }
-    }
-
     .card_avatar img {
       border: 2px solid rgba(197, 209, 222, 0.15);
       border-radius: 50%;
@@ -159,15 +141,6 @@
       main.thread {
         & .card:not(:last-of-type) .card_avatar::after {
           border-right: 2px solid rgba(197, 209, 222, 0.15);
-        }
-      }
-
-      .pill {
-        background-color: rgba(0, 0, 0, 0.15);
-        color: var(--text-color-light-faded);
-
-        &:hover {
-          color: var(--color-brand-complement);
         }
       }
     }

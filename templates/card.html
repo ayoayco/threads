@@ -17,8 +17,8 @@
 
     & .body {
 
-      .hashtag,
-      .mention {
+      .hashtag:not(.pill),
+      .mention:not(.pill) {
         color: var(--text-color-dark-faded);
         text-decoration: none;
 
@@ -128,8 +128,8 @@
 
       & .body {
 
-        .hashtag,
-        .mention {
+        .hashtag:not(.pill),
+        .mention:not(.pill) {
           color: var(--text-color-light-faded);
           text-decoration: none;
 
@@ -156,15 +156,6 @@
           text-decoration-color: var(--color-brand-complement);
           border-color: var(--color-brand-complement);
         }
-      }
-    }
-
-    .pill {
-      background-color: rgba(0, 0, 0, 0.15);
-      color: var(--text-color-light-faded);
-
-      &:hover {
-        color: var(--color-brand-complement);
       }
     }
   }
