@@ -5,7 +5,7 @@ from .cache import cache
 
 app = Flask(__name__)
 cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
-app.register_blueprint(threads, url_prefix='/', static_folder='static', static_url_path='/threads/static')
+app.register_blueprint(threads, url_prefix='/')
 app.config.from_file("config.json", load=json.load)
 
 if __name__ == '__main__':
