@@ -65,7 +65,7 @@ async def home():
     # List featured hashtags
     tags = masto.featured_tags()
 
-    return render_template('home.html', threads=statuses, tags=tags, app=app, attribution=attribution, render_date=datetime.now())
+    return render_template('_home.html', threads=statuses, tags=tags, app=app, attribution=attribution, render_date=datetime.now())
 
 
 @threads.route('/tag/<path:id>')
@@ -83,7 +83,7 @@ async def tag(id):
 
 
 
-    return render_template('tag-page.html', threads=statuses, tag=id, app=app, tags=tags, attribution=attribution, render_date=datetime.now())
+    return render_template('_tag.html', threads=statuses, tag=id, app=app, tags=tags, attribution=attribution, render_date=datetime.now())
 
 
 @threads.route('/<path:id>')
@@ -96,7 +96,7 @@ def thread(id):
         status['summary'] = utils.clean_html(status['content']).strip()
         if len(status['summary']) > 69:
             status['summary'] = status['summary'][:69] + '...'
-        return render_template('home.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
+        return render_template('_home.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
     else:
         return '<h1>Not Found</h1><p>🤷🤷‍♀️🤷‍♂️</p><a href="/">go home</a>', 404
 
