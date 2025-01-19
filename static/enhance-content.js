@@ -1,15 +1,8 @@
-import { WebComponent } from "web-component-base";
-
-class EnhanceContent extends WebComponent {
-  static props = {
-    server: "",
-    tagUrl: "",
-  };
-
-  onInit() {
+class EnhanceContent extends HTMLElement {
+  connectedCallback() {
     const el = this.getElementsByClassName("hashtag");
-    const server = this.props.server;
-    const tagUrl = this.props.tagUrl;
+    const server = this.dataset.server;
+    const tagUrl = this.dataset.tagUrl;
 
     for (let i = 0; i < el.length; i++) {
       const tagEl = el.item(i);
@@ -37,10 +30,6 @@ class EnhanceContent extends WebComponent {
         tagEl.classList.add("pill");
       }
     }
-  }
-
-  get template() {
-    return this.innerHtml;
   }
 }
 

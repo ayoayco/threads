@@ -25,7 +25,7 @@
 
     <div class="body">
 
-      <enhance-content server={{server}} tag-url={{url_for('threads.tag', id='' )}}>
+      <enhance-content data-server={{server}} data-tag-url={{url_for('threads.tag', id='' )}}>
         {{thread.content | safe}}
       </enhance-content>
       {% for media in thread.media_attachments %}
