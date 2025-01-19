@@ -22,8 +22,8 @@
     import TimeAgo from 'https://esm.sh/v135/@github/relative-time-element@4.4.0'
   </script>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('threads.static', filename='variables.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('threads.static', filename='reset.css') }}" />
   <style>
     html {
       scroll-behavior: smooth;
@@ -354,7 +354,7 @@
     <p>Rendered on {{ render_date }} in Europe/Amsterdam</p>
   </footer>
 
-  <script type="module" src="{{ url_for('static', filename='enhance-content.js') }}">
+  <script type="module" src="{{ url_for('threads.static', filename='enhance-content.js') }}">
   </script>
 </body>
 
