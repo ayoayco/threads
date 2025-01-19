@@ -6,7 +6,7 @@ import asyncio
 import aiohttp
 from . import mastodon, utils
 
-threads = Blueprint('threads', __name__, template_folder='templates', static_folder='static', static_url_path='/threads/static')
+threads = Blueprint('threads', __name__, template_folder='templates', static_folder='static')
 
 # TODO: move following to an app config or sqlite #########
 thread_ids = [
