@@ -3,6 +3,7 @@ import re
 
 def clean_status(status):
     clean = clean_dict(status, ['id', 'content', 'created_at', 'url', 'media_attachments', 'card', 'tags'])
+    clean['id'] = str(status['id'])
     clean['account'] = clean_author(status['account'])
     clean['content'] = markdown.markdown("<section markdown='block'>"+ clean['content'] +"</section>", extensions=['md_in_html'])
     for emoji in status['emojis']:
