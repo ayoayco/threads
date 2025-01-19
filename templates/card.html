@@ -8,9 +8,9 @@
 
   <div class="card_content" id="{{ thread.id }}">
     <div class="heading">
-      <h2 class="author" rel="author">
+      <h3 class="author" rel="author">
         {{thread.account.display_name | safe}}
-      </h2>
+      </h3>
 
       <div class="right_menu">
         <a href="{{ thread.url }}" title="{{ thread.created_at }}">

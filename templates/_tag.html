@@ -68,6 +68,11 @@
     }
 
     main {
+      h2 {
+        text-align: center;
+        text-transform: uppercase;
+      }
+
       & ul.tags {
         list-style: none;
         padding-left: 0;
@@ -301,18 +306,19 @@
   <a id="top"></a>
   <header>
     {% include "nav.html" %}
-    <h1>{{ app.title }} / {{ tag }}</h1>
+    <h1>{{ app.title }}</h1>
     <p>{{ app.description }}</p>
   </header>
   <main class={{ "thread" if threads|length==1 else "home" }}>
-    {% if tags is defined%}
+    <!-- {% if tags is defined%}
     {% with tags=tags %}
     {% include "tag-pills.html" %}
     {% endwith %}
-    {% endif %}
+    {% endif %} -->
     <div class="back">
       <a href="{{url_for('threads.home')}}">Back</a>
     </div>
+    <h2>{{ tag }}</h2>
     {% for thread in threads %}
     {% with is_tag=tag!=None, thread=thread, parent_id=thread.id, is_thread=threads|length > 1, server=app.server %}
     {% include "card.html" %}
