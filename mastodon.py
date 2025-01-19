@@ -30,7 +30,7 @@ def initialize_client(app):
         secret = secret_file.read()
     except OSError as e:
         message = '>>> No secret found.'
-        raise Exception(message)
+        print(message)
 
     # todo, check if access_token exist in secret_file
     if secret == None:
@@ -49,8 +49,12 @@ def initialize_client(app):
 
     else:
         #... otherwise, reuse
-        mastodon = Mastodon(access_token=app['secret_file'])
-        print('>>> Reused persisted token!')
+        try:
+            mastodon = Mastodon(access_token=app['secret_file'])
+            print('>>> Reused persisted token!')
+        except:
+            message = '>>> Persisted token did not work'
+            raise Exception(message)
  
     if session_id == None:
         try:
