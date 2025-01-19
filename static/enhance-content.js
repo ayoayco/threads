@@ -22,11 +22,10 @@ class EnhanceContent extends HTMLElement {
 
       const childrenTags = parentEl.getElementsByClassName("hashtag");
 
-      console.log({ childrenTags, siblings, validSiblingsCount });
-
       const isTagBar = validSiblingsCount === childrenTags.length;
 
       if (isTagBar) {
+        parentEl.classList.add("tag-bar");
         tagEl.textContent = tagName;
         tagEl.classList.add("pill");
       }
