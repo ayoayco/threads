@@ -15,7 +15,8 @@ def get_account_tagged_statuses(app, tag):
             exclude_reblogs=True
         )
     except:
-        print('>>> failed to fetch statuses', tag)
+        message = f'>>> failed to fetch statuses for ${tag}'
+        raise Exception(message)
 
     return list(map(lambda x: utils.clean_status(x), statuses))
 
@@ -28,7 +29,8 @@ def initialize_client(app):
         secret_file = open(app['secret_file'], 'r')
         secret = secret_file.read()
     except OSError as e:
-        print('>>> No secret found.')
+        message = '>>> No secret found.'
+        raise Exception(message)
 
     # todo, check if access_token exist in secret_file
     if secret == None:
