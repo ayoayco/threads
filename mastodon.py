@@ -4,6 +4,10 @@ from . import utils
 session_id = None
 account_id = None
 
+def is_public(status):
+    print(status)
+    return status['visibility'] == 'public'
+
 def get_account_tagged_statuses(app, tag):
     global account_id
     mastodon = initialize_client(app)
@@ -18,7 +22,10 @@ def get_account_tagged_statuses(app, tag):
         message = f'>>> failed to fetch statuses for ${tag}'
         raise Exception(message)
 
-    return list(map(lambda x: utils.clean_status(x), statuses))
+    # filter out not public
+    filtered = filter(is_public, statuses)
+
+    return list(map(lambda x: utils.clean_status(x), filtered))
 
 def initialize_client(app):
     global session_id
