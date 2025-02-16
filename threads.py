@@ -15,7 +15,7 @@ thread_ids = [
     '113650907203476875',
     '113449531956042438',
     '113300434695033812',
-    # '113210189309775644',
+    '113210189309775644',
     '113073168505436055',
     '112979161274124372',
     '112857903897175549',
@@ -25,7 +25,7 @@ thread_ids = [
     '112457129122626146',
     '112446314845243621',
     '112438729626526601',
-    '112410098697040344',
+    # '112410098697040344',
     # '112400284252533385',
     # '112365019457303644',
     # '112360396639315016',
@@ -83,16 +83,13 @@ async def tag(id):
 @threads.route('/<path:id>')
 @cache.cached(timeout=300)
 def thread(id):
-    if id in thread_ids:
-        attribution = get_attribution()
-        app = get_app_config()
-        status = fetch_thread(id)
-        status['summary'] = utils.clean_html(status['content']).strip()
-        if len(status['summary']) > 69:
-            status['summary'] = status['summary'][:69] + '...'
-        return render_template('_home.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
-    else:
-        return '<h1>Not Found</h1><p>🤷🤷‍♀️🤷‍♂️</p><a href="/">go home</a>', 404
+    attribution = get_attribution()
+    app = get_app_config()
+    status = fetch_thread(id)
+    status['summary'] = utils.clean_html(status['content']).strip()
+    if len(status['summary']) > 69:
+        status['summary'] = status['summary'][:69] + '...'
+    return render_template('_home.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
 
 @threads.route('/api')
 @cache.cached(timeout=300)
