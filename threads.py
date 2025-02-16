@@ -10,6 +10,7 @@ threads = Blueprint('threads', __name__, template_folder='templates', static_fol
 
 # TODO: move following to an app config or sqlite #########
 thread_ids = [
+		'114012659479108663',
     '113775430984622212',
     # '113808885064957157', # -- has embed, erroring: no account
     '113650907203476875',
