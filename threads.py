@@ -10,8 +10,8 @@ threads = Blueprint('threads', __name__, template_folder='templates', static_fol
 
 # TODO: move following to an app config or sqlite #########
 thread_ids = [
-		'113986386529736815',
 		'114012659479108663',
+		'113986386529736815',
     '113775430984622212',
     '113650907203476875',
     '113449531956042438',
