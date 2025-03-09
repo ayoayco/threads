@@ -10,8 +10,8 @@ threads = Blueprint('threads', __name__, template_folder='templates', static_fol
 
 # TODO: move following to an app config or sqlite #########
 thread_ids = [
-		'114012659479108663',
-		'113986386529736815',
+    '114012659479108663',
+    '113986386529736815',
     '113775430984622212',
     '113650907203476875',
     '113449531956042438',
@@ -138,9 +138,8 @@ def get_descendants(server, status):
     context = requests.get(server + '/api/v1/statuses/' + status['id'] + '/context').json()
     descendants = []
     for reply in context['descendants']:
-        # TODO: the following condition will include a reply to a reply of the author 
+        # TODO: the following condition will include a reply to a reply of the author
         # - edge case: a different author replies in the thread and the author replies then replies again
         if reply['account']['id'] == author_id and reply['in_reply_to_account_id'] == author_id:
             descendants.append(utils.clean_status(reply))
     return descendants
-
