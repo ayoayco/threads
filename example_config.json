@@ -5,9 +5,7 @@
       "title": "Thoughts",
       "description": "Hand-picked public posts from my social feed",
       "server": "https://social.ayco.io",
-      "user": "user@mastodon.social",
-      "password": "ultraelectromagneticpassword",
-      "secret_file": "threads-masto-client.secret"
+      "user_id": "0123456789"
     }
   },
   "ATTRIBUTION": {

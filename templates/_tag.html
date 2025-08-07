@@ -6,13 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ app.title }} / {{ tag }}</title>
   <meta name="theme-color" content="#3054bf">
-  {% if threads|length == 1 %}
-  <meta name="description" content="{{ threads[0].summary }}" />
-  <meta property="og:description" content="{{ threads[0].summary }}" />
-  {% else %}
   <meta name="description" content="{{ app.description  }}" />
   <meta property="og:description" content="{{ app.description }}" />
-  {% endif %}
   <meta name="author" content="{{ attribution.owner }}" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="{{ app.site_name }}" />

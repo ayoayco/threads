@@ -4,7 +4,7 @@ from datetime import datetime
 from .cache import cache
 import asyncio
 import aiohttp
-from . import mastodon, utils
+from . import utils
 
 threads = Blueprint('threads', __name__, template_folder='templates', static_folder='static')
 
@@ -45,12 +45,44 @@ thread_ids = [
 
 ###########################################################
 
+### config
+def server():
+    return current_app.config['APPS']['threads']['server']
+
 def get_attribution():
     return current_app.config['ATTRIBUTION']
 
 def get_app_config():
     return current_app.config['APPS']['threads']
 
+def get_user_id():
+    return current_app.config['APPS']['threads']['user_id']
+
+### featured tags
+def get_account_tagged_statuses(tag_name):
+    print(tag_name)
+    id = get_user_id()
+    ser = server()
+    url = f'{ser}/api/v1/accounts/{id}/statuses?exclude_replies=true&tagged={tag_name}'
+    response = requests.get(url)
+    statuses = response.json()
+    statuses = [utils.clean_status(s) for s in statuses]
+    return statuses
+
+def get_tags_url():
+    id = get_user_id()
+    ser = server()
+    url = f'{ser}/api/v1/accounts/{id}/featured_tags'
+    return url
+
+def get_featured_tags():
+    url = get_tags_url()
+    response = requests.get(url)
+    tags = response.json()
+    return tags
+
+
+### middleware
 @threads.before_request
 def middleware():
     # check current year and put ange as attribution
@@ -61,53 +93,7 @@ def middleware():
     if year != attribution['year']:
         attribution['current_year'] = year
 
-@threads.route('/')
-@cache.cached(timeout=300)
-async def home():
-    statuses = await fetch_statuses()
-    attribution = get_attribution()
-    app = get_app_config()
-    tags = []
-
-    masto = mastodon.initialize_client(app)
-
-    # List featured hashtags
-    tags = masto.featured_tags()
-
-    return render_template('_home.html', threads=statuses, tags=tags, app=app, attribution=attribution, render_date=datetime.now())
-
-
-@threads.route('/tag/<path:id>')
-@cache.cached(timeout=300)
-async def tag(id):
-    attribution = get_attribution()
-    app = get_app_config()
-    statuses = mastodon.get_account_tagged_statuses(app, id)
-
-    return render_template('_tag.html', threads=statuses, tag=id, app=app, attribution=attribution, render_date=datetime.now())
-
-
-@threads.route('/<path:id>')
-@cache.cached(timeout=300)
-def thread(id):
-    attribution = get_attribution()
-    app = get_app_config()
-    status = fetch_thread(id)
-    status['summary'] = utils.clean_html(status['content']).strip()
-    if len(status['summary']) > 69:
-        status['summary'] = status['summary'][:69] + '...'
-    return render_template('_home.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
-
-@threads.route('/api')
-@cache.cached(timeout=300)
-async def api():
-    return await fetch_statuses();
-
-@threads.route('/api/<path:id>')
-@cache.cached(timeout=300)
-def api_thread(id):
-    return fetch_thread(id)
-
+### statuses
 async def get(url, session):
     try:
         async with session.get(url, ssl=False) as response:
@@ -119,9 +105,6 @@ async def get(url, session):
 
 def get_status_url(ser, id):
     return f'{ser}/api/v1/statuses/{id}'
-
-def server():
-    return current_app.config['APPS']['threads']['server']
 
 async def fetch_statuses():
     statuses = []
@@ -149,3 +132,50 @@ def get_descendants(server, status):
         if reply['account']['id'] == author_id and reply['in_reply_to_account_id'] == author_id:
             descendants.append(utils.clean_status(reply))
     return descendants
+
+### routes
+@threads.route('/')
+@cache.cached(timeout=300)
+async def home():
+    statuses = await fetch_statuses()
+    attribution = get_attribution()
+    app = get_app_config()
+    tags = []
+
+    # List featured hashtags
+    tags = get_featured_tags()
+
+    return render_template('_home.html', threads=statuses, tags=tags, app=app, attribution=attribution, render_date=datetime.now())
+
+
+@threads.route('/tag/<path:id>')
+@cache.cached(timeout=300)
+async def tag(id):
+    attribution = get_attribution()
+    app = get_app_config()
+    statuses = get_account_tagged_statuses(id)
+
+    return render_template('_tag.html', threads=statuses, tag=id, app=app, attribution=attribution, render_date=datetime.now())
+
+
+@threads.route('/<path:id>')
+@cache.cached(timeout=300)
+def thread(id):
+    attribution = get_attribution()
+    app = get_app_config()
+    status = fetch_thread(id)
+    status['summary'] = utils.clean_html(status['content']).strip()
+    if len(status['summary']) > 69:
+        status['summary'] = status['summary'][:69] + '...'
+    return render_template('_home.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
+
+@threads.route('/api')
+@cache.cached(timeout=300)
+async def api():
+    return await fetch_statuses();
+
+@threads.route('/api/<path:id>')
+@cache.cached(timeout=300)
+def api_thread(id):
+    return fetch_thread(id)
+
