@@ -71,7 +71,6 @@
     display: grid;
     grid-template-columns: auto auto;
     gap: 5px;
-    height: 20px;
 
     & .author {
       font-size: var(--font-size-lg);
