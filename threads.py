@@ -145,6 +145,13 @@ async def home():
     # List featured hashtags
     tags = get_featured_tags()
 
+    # ---- NEW: Remove any `None` entries from the status list
+    # (you can also replace them with a default object if desired)
+    if statuses is None:
+        statuses = []                      # fallback to an empty list
+    else:
+        statuses = [s for s in statuses if s]  # keep only truthy statuses
+
     return render_template('_home.html', threads=statuses, tags=tags, app=app, attribution=attribution, render_date=datetime.now())
 
 
