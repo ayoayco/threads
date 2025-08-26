@@ -170,10 +170,11 @@ async def tag(id):
 def thread(id):
     attribution = get_attribution()
     app = get_app_config()
+    max_length = app.get('max_summary_length', 69)  # Configure max summary length
     status = fetch_thread(id)
     status['summary'] = utils.clean_html(status['content']).strip()
-    if len(status['summary']) > 69:
-        status['summary'] = status['summary'][:69] + '...'
+    if len(status['summary']) > max_length:
+        status['summary'] = status['summary'][:max_length] + '...'
     return render_template('_home.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
 
 @threads.route('/api')
