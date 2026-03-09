@@ -100,11 +100,13 @@ def middleware():
 async def get(url, session):
     try:
         async with session.get(url, ssl=False) as response:
-            res = await response.json()
-            return utils.clean_status(res)
+            if response.status == 200:
+                res = await response.json()
+                return utils.clean_status(res)
+            else:
+                print(f"No status: {url}")
     except Exception as e:
-        print(f"Unable to get url {url} due to {e.__class__}")
-        return {}
+        return None
 
 def get_status_url(ser, id):
     return f'{ser}/api/v1/statuses/{id}'
@@ -115,7 +117,8 @@ async def fetch_statuses():
     try:
         async with aiohttp.ClientSession() as session:
             statuses = await asyncio.gather(*(get(url, session) for url in urls))
-            return statuses
+            filtered = [x for x in statuses if x is not None]
+            return filtered
     except:
         return None
 
