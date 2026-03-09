@@ -2,13 +2,10 @@ from flask import Blueprint, render_template, current_app
 import requests
 from datetime import datetime
 from .cache import cache
-import asyncio
-import aiohttp
 from . import utils
 
 threads = Blueprint('threads', __name__, template_folder='templates', static_folder='static')
 
-# TODO: move following to an app config or sqlite #########
 thread_ids = [
     '115620814664415087',
     '115090396384901152',
@@ -30,19 +27,6 @@ thread_ids = [
     '112857903897175549',
     '112857168376771706',
     '112524983806134679',
-    # '112461583113763423',
-    # '112457129122626146',
-    # '112446314845243621',
-    # '112438729626526601',
-    # '112410098697040344',
-    # '112400284252533385',
-    # '112365019457303644',
-    # '112360396639315016',
-    # '112305891918761955',
-    # '112258065967208438',
-    # '111657861089216432',
-    # '110639728990416918',
-    # '109545132056133905'
 ]
 
 ###########################################################
@@ -62,7 +46,6 @@ def get_user_id():
 
 ### featured tags
 def get_account_tagged_statuses(tag_name):
-    print(tag_name)
     id = get_user_id()
     ser = server()
     url = f'{ser}/api/v1/accounts/{id}/statuses?exclude_replies=true&tagged={tag_name}'
@@ -98,30 +81,17 @@ def middleware():
         attribution['current_year'] = year
 
 ### statuses
-async def get(url, session):
-    try:
-        async with session.get(url, ssl=False) as response:
-            if response.status == 200:
-                res = await response.json()
-                return utils.clean_status(res)
-            else:
-                print(f"No status: {url}")
-    except Exception as e:
-        return None
-
 def get_status_url(ser, id):
     return f'{ser}/api/v1/statuses/{id}'
 
 async def fetch_statuses():
-    statuses = []
-    urls = [get_status_url(server(), id) for id in thread_ids]
-    try:
-        async with aiohttp.ClientSession() as session:
-            statuses = await asyncio.gather(*(get(url, session) for url in urls))
-            filtered = [x for x in statuses if x is not None]
-            return filtered
-    except:
-        return None
+    query_params = "&id[]=".join(thread_ids)
+    response = requests.get(server() + '/api/v1/statuses?id[]=' + query_params )
+    if response.status_code == 200:
+        statuses = response.json()
+        return statuses
+    else:
+        return []
 
 def fetch_thread(id):
     response = requests.get(server() + '/api/v1/statuses/' + id )
@@ -186,10 +156,11 @@ def thread(id):
     app = get_app_config()
     max_length = app.get('max_summary_length', 69)  # Configure max summary length
     status = fetch_thread(id)
-    status['summary'] = utils.clean_html(status['content']).strip()
-    if len(status['summary']) > max_length:
-        status['summary'] = status['summary'][:max_length] + '...'
-    return render_template('_home.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
+    if status is not None:
+        status['summary'] = utils.clean_html(status['content']).strip()
+        if len(status['summary']) > max_length:
+            status['summary'] = status['summary'][:max_length] + '...'
+        return render_template('_home.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
 
 @threads.route('/api')
 @cache.cached(timeout=300)
