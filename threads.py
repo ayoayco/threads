@@ -179,7 +179,7 @@ async def tag(id):
     return render_template('_tag.html', threads=statuses, tag=id, app=app, attribution=attribution, render_date=datetime.now())
 
 
-@threads.route('/<path:id>')
+@threads.route('/thread/<path:id>')
 @cache.cached(timeout=300)
 def thread(id):
     attribution = get_attribution()
