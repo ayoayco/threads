@@ -84,7 +84,7 @@ def middleware():
 def get_status_url(ser, id):
     return f'{ser}/api/v1/statuses/{id}'
 
-async def fetch_statuses():
+def fetch_statuses():
     query_params = "&id[]=".join(thread_ids)
     response = requests.get(server() + '/api/v1/statuses?id[]=' + query_params )
     if response.status_code == 200:
@@ -121,8 +121,8 @@ def get_descendants(server, status):
 ### routes
 @threads.route('/')
 @cache.cached(timeout=300)
-async def home():
-    statuses = await fetch_statuses()
+def home():
+    statuses = fetch_statuses()
     attribution = get_attribution()
     app = get_app_config()
     tags = []
@@ -141,7 +141,7 @@ async def home():
 
 @threads.route('/tag/<path:id>')
 @cache.cached(timeout=300)
-async def tag(id):
+def tag(id):
     attribution = get_attribution()
     app = get_app_config()
     statuses = get_account_tagged_statuses(id)
@@ -164,8 +164,8 @@ def thread(id):
 
 @threads.route('/api')
 @cache.cached(timeout=300)
-async def api():
-    return await fetch_statuses();
+def api():
+    return fetch_statuses();
 
 @threads.route('/api/<path:id>')
 @cache.cached(timeout=300)
