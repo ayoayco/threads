@@ -10,7 +10,6 @@ threads = Blueprint('threads', __name__, template_folder='templates', static_fol
 
 # TODO: move following to an app config or sqlite #########
 thread_ids = [
-    '116045566641672623',
     '115620814664415087',
     '115090396384901152',
     '114700726180478526',
@@ -68,17 +67,23 @@ def get_account_tagged_statuses(tag_name):
     ser = server()
     url = f'{ser}/api/v1/accounts/{id}/statuses?exclude_replies=true&tagged={tag_name}'
     response = requests.get(url)
-    statuses = response.json()
-    statuses = [utils.clean_status(s) for s in statuses]
-    return statuses
+    if response.status_code == 200:
+        statuses = response.json()
+        statuses = [utils.clean_status(s) for s in statuses]
+        return statuses
+    else:
+        return []
 
 def get_featured_tags():
     id = get_user_id()
     ser = server()
     url = f'{ser}/api/v1/accounts/{id}/featured_tags'
     response = requests.get(url)
-    tags = response.json()
-    return tags
+    if response.status_code == 200:
+        tags = response.json()
+        return tags
+    else:
+        return []
 
 
 ### middleware
@@ -119,21 +124,29 @@ async def fetch_statuses():
         return None
 
 def fetch_thread(id):
-    status = requests.get(server() + '/api/v1/statuses/' + id ).json()
-    status = utils.clean_status(status)
-    status['descendants'] = get_descendants(server(), status)
-    return status
+    response = requests.get(server() + '/api/v1/statuses/' + id )
+    if response.status_code == 200:
+        status = response.json()
+        status = utils.clean_status(status)
+        status['descendants'] = get_descendants(server(), status)
+        return status
+    else:
+        return None
 
 def get_descendants(server, status):
     author_id = status['account']['id']
-    context = requests.get(server + '/api/v1/statuses/' + status['id'] + '/context').json()
-    descendants = []
-    for reply in context['descendants']:
-        # TODO: the following condition will include a reply to a reply of the author
-        # - edge case: a different author replies in the thread and the author replies then replies again
-        if reply['account']['id'] == author_id and reply['in_reply_to_account_id'] == author_id:
-            descendants.append(utils.clean_status(reply))
-    return descendants
+    response = requests.get(server + '/api/v1/statuses/' + status['id'] + '/context')
+    if response.status_code == 200:
+        context = response.json()
+        descendants = []
+        for reply in context['descendants']:
+            # TODO: the following condition will include a reply to a reply of the author
+            # - edge case: a different author replies in the thread and the author replies then replies again
+            if reply['account']['id'] == author_id and reply['in_reply_to_account_id'] == author_id:
+                descendants.append(utils.clean_status(reply))
+        return descendants
+    else:
+        return []
 
 ### routes
 @threads.route('/')
