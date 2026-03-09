@@ -68,7 +68,6 @@ def get_featured_tags():
     else:
         return []
 
-
 ### middleware
 @threads.before_request
 def middleware():
@@ -84,8 +83,8 @@ def middleware():
 def get_status_url(ser, id):
     return f'{ser}/api/v1/statuses/{id}'
 
-def fetch_statuses():
-    query_params = "&id[]=".join(thread_ids)
+def fetch_statuses(ids):
+    query_params = "&id[]=".join(ids)
     response = requests.get(server() + '/api/v1/statuses?id[]=' + query_params )
     if response.status_code == 200:
         statuses = response.json()
@@ -122,7 +121,7 @@ def get_descendants(server, status):
 @threads.route('/')
 @cache.cached(timeout=300)
 def home():
-    statuses = fetch_statuses()
+    statuses = fetch_statuses(thread_ids)
     attribution = get_attribution()
     app = get_app_config()
     tags = []
@@ -165,7 +164,7 @@ def thread(id):
 @threads.route('/api')
 @cache.cached(timeout=300)
 def api():
-    return fetch_statuses();
+    return fetch_statuses(thread_ids);
 
 @threads.route('/api/<path:id>')
 @cache.cached(timeout=300)
