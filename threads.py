@@ -72,14 +72,10 @@ def get_account_tagged_statuses(tag_name):
     statuses = [utils.clean_status(s) for s in statuses]
     return statuses
 
-def get_tags_url():
+def get_featured_tags():
     id = get_user_id()
     ser = server()
     url = f'{ser}/api/v1/accounts/{id}/featured_tags'
-    return url
-
-def get_featured_tags():
-    url = get_tags_url()
     response = requests.get(url)
     tags = response.json()
     return tags
