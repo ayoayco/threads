@@ -1,5 +1,5 @@
 conda activate threads
-flask --debug run
+flask --app app.py --debug run
 
 # after run
 conda deactivate
