@@ -6,7 +6,8 @@
       "description": "Hand-picked public posts from my social feed",
       "server": "https://social.ayco.io",
       "user_id": "0123456789",
-      "max_summary_length": 100
+      "max_summary_length": 100,
+      "advisory": false
     }
   },
   "ATTRIBUTION": {

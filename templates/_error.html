@@ -162,6 +162,9 @@
   </header>
   <main>
     <h3>Whoa!</h3>
+    {%if app.advisory is not false %}
+    <p>{{ app.advisory | safe }}</p>
+    {% endif %}
     <p class="error-message">{{message}}</p>
   </main>
   <footer>
