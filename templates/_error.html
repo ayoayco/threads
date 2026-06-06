@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ app.title }}</title>
+  <meta name="theme-color" content="#3054bf">
+  {% if threads|length == 1 %}
+  <meta name="description" content="{{ threads[0].summary }}" />
+  <meta property="og:description" content="{{ threads[0].summary }}" />
+  {% else %}
+  <meta name="description" content="{{ app.description  }}" />
+  <meta property="og:description" content="{{ app.description }}" />
+  {% endif %}
+  <meta name="author" content="{{ attribution.owner }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="{{ app.site_name }}" />
+  <meta property="og:title" content="{{ app.title }}" />
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      color: var(--text-color-dark);
+      font-size: var(--font-size-base);
+      display: grid;
+      gap: 1em;
+      padding: 0 1em;
+
+      a {
+        color: var(--color-link);
+      }
+
+      small {
+        font-size: var(--font-size-sm);
+      }
+    }
+
+    header {
+      & a.app-title {
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    header,
+    footer {
+      background: var(--ayo-gradient);
+      color: var(--text-color-light);
+      border-radius: 5px;
+      padding: 1em;
+      text-wrap: balance;
+
+      & a {
+        color: var(--text-color-light);
+      }
+    }
+
+
+    footer {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    main {
+      & ul.tags {
+        list-style: none;
+        padding-left: 0;
+
+        & li {
+          display: inline
+        }
+      }
+
+      .error-message {
+        overflow-x: auto;
+      }
+
+      display: grid;
+      gap: 1em;
+    }
+
+    main.home {
+      & .back {
+        display: none
+      }
+    }
+
+    main.thread {
+      & .card:not(:last-of-type) .card_avatar::after {
+        content: " ";
+        display: block;
+        height: 100%;
+        border-right: 2px solid rgba(34, 34, 34, 0.15);
+        width: 26px;
+        margin-top: -8px;
+      }
+    }
+
+    .card_avatar img {
+      border: 2px solid rgba(197, 209, 222, 0.15);
+      border-radius: 50%;
+      display: inline;
+      width: 50px;
+    }
+
+    .card {
+      grid-template-columns: 55px auto;
+      display: grid;
+      gap: 5px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+
+      html,
+      body {
+        background: var(--bg-darker);
+        color: var(--text-color-light);
+      }
+
+      main a {
+        color: var(--color-brand-complement);
+      }
+
+      main.thread {
+        & .card:not(:last-of-type) .card_avatar::after {
+          border-right: 2px solid rgba(197, 209, 222, 0.15);
+        }
+      }
+
+    }
+  </style>
+
+  <!-- Use parent app's variables & reset stylesheets -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='variables.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}" />
+
+  <!-- threads specific static css-->
+  {% include "styles.html" %}
+
+  <!-- {% include "import-map.html" %} -->
+</head>
+
+<body>
+  <a id="top"></a>
+  <header>
+    {% include "nav.html" %}
+    <a class="app-title" href="{{url_for('threads.home')}}">
+      <h1>{{ app.title }}</h1>
+    </a>
+    <p>{{ app.description }}</p>
+
+  </header>
+  <main>
+    <h3>Whoa!</h3>
+    <p class="error-message">{{message}}</p>
+  </main>
+  <footer>
+    <p>
+      Copyright &copy;
+      {% if attribution.current_year %}
+      {{ attribution.year}}-{{ attribution.current_year }}
+      {% else %}
+      {{ attribution.year}}
+      {% endif %}
+      {{ attribution.owner }}
+    </p>
+    <p>
+      Powered by <a href="https://ayco.io/sh/threads">/threads</a>
+    </p>
+    <p>Rendered on {{ render_date }} in Europe/Amsterdam</p>
+  </footer>
+
+  <script defer type="module">
+    import TimeAgo from "https://esm.sh/v135/@github/relative-time-element@4.4.0/es2022/relative-time.js"
+    customElements.define('relative-time', TimeAgo)
+  </script>
+  <script defer type="module" src="{{ url_for('threads.static', filename='enhance-content.js') }}">
+  </script>
+</body>
+
+</html>

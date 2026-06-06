@@ -48,8 +48,9 @@ def get_account_tagged_statuses(tag_name):
         statuses = [utils.clean_status(s) for s in statuses]
         return statuses
     else:
-        current_app.logger.error(f"get_account_tagged_statuses returned: {response.status_code}", url)
-        return []
+        message=f"get_account_tagged_statuses returned: {response.status_code} for {url}"
+        current_app.logger.error(message)
+        raise ValueError(message)
 
 def get_featured_tags():
     id = get_user_id()
@@ -60,8 +61,9 @@ def get_featured_tags():
         tags = response.json()
         return tags
     else:
-        current_app.logger.error(f"get_featured_tags returned: {response.status_code}", url)
-        return []
+        message=f"get_featured_tags returned: {response.status_code} for {url}"
+        current_app.logger.error(message)
+        raise ValueError(message)
 
 ### middleware
 @threads.before_request
@@ -91,8 +93,9 @@ def fetch_statuses(ids):
 
         return statuses
     else:
-        current_app.logger.error(f"fetch_statuses returned: {response.status_code}", url)
-        return []
+        message=f"fetch_statuses returned: {response.status_code} for {url}"
+        current_app.logger.error(message)
+        raise ValueError(message)
 
 def fetch_thread(id):
     url = server() + '/api/v1/statuses/' + id
@@ -103,8 +106,9 @@ def fetch_thread(id):
         status['descendants'] = get_descendants(server(), status)
         return status
     else:
-        current_app.logger.error(f"fetch_thread returned: {response.status_code}", url)
-        return None
+        message=f"fetch_thread returned: {response.status_code} for {url}"
+        current_app.logger.error(message)
+        raise ValueError(message)
 
 def get_descendants(server, status):
     author_id = status['account']['id']
@@ -120,29 +124,34 @@ def get_descendants(server, status):
                 descendants.append(utils.clean_status(reply))
         return descendants
     else:
-        current_app.logger.error(f"get_descendants returned: {response.status_code}", url)
-        return []
+        message=f"get_descendants returned: {response.status_code} for {url}"
+        current_app.logger.error(message)
+        raise ValueError(message)
 
 ### routes
 @threads.route('/')
 @cache.cached(timeout=300)
 def home():
-    statuses = fetch_statuses(thread_ids)
-    statuses = [utils.clean_status(s) for s in statuses]
-    attribution = get_attribution()
     app = get_app_config()
-    tags = []
+    attribution = get_attribution()
+    try:
+        statuses = fetch_statuses(thread_ids)
+        statuses = [utils.clean_status(s) for s in statuses]
+        tags = []
 
-    # List featured hashtags
-    tags = get_featured_tags()
+        # List featured hashtags
+        tags = get_featured_tags()
 
-    # Remove any `None` entries from the status list
-    if statuses is None:
-        statuses = []                      # fallback to an empty list
-    else:
-        statuses = [s for s in statuses if s]  # keep only truthy statuses
+        # Remove any `None` entries from the status list
+        if statuses is None:
+            statuses = []                      # fallback to an empty list
+        else:
+            statuses = [s for s in statuses if s]  # keep only truthy statuses
 
-    return render_template('_home.html', threads=statuses, tags=tags, app=app, attribution=attribution, render_date=datetime.now())
+        return render_template('_home.html', threads=statuses, tags=tags, app=app, attribution=attribution, render_date=datetime.now())
+    except ValueError as message:
+        return render_template('_error.html', app=app, attribution=attribution, render_date=datetime.now(), message=message)
+
 
 
 @threads.route('/tag/<path:id>')
