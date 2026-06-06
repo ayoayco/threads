@@ -29,8 +29,6 @@
       margin: 0 auto;
       color: var(--text-color-dark);
       font-size: var(--font-size-base);
-      display: grid;
-      gap: 1em;
       padding: 0 1em;
 
       a {
@@ -54,6 +52,7 @@
 
     header,
     footer {
+      height: fit-content;
       background: var(--ayo-gradient);
       color: var(--text-color-light);
       border-radius: 5px;
@@ -65,13 +64,16 @@
       }
     }
 
-
+    header {
+      margin-top: 1em;
+    }
     footer {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
+      margin-bottom: 1em;
     }
 
     main {
+      padding: 1em 0;
+
       & ul.tags {
         list-style: none;
         padding-left: 0;
@@ -83,6 +85,7 @@
 
       .error-message {
         overflow-x: auto;
+        font-size: small;
       }
 
       display: grid;
@@ -151,8 +154,8 @@
 </head>
 
 <body>
-  <a id="top"></a>
   <header>
+    <a id="top"></a>
     {% include "nav.html" %}
     <a class="app-title" href="{{url_for('threads.home')}}">
       <h1>{{ app.title }}</h1>
@@ -180,7 +183,7 @@
     <p>
       Powered by <a href="https://ayco.io/sh/threads">/threads</a>
     </p>
-    <p>Rendered on {{ render_date }} in Europe/Amsterdam</p>
+    <p>Rendered on {{ render_date }} in Europe/Amsterdam :)</p>
   </footer>
 
   <script defer type="module">
