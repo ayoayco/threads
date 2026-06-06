@@ -44,11 +44,11 @@ See it [in action](https://ayco.io/threads).
    # create app config from example
    $ cp example_config.json config.json
 
-   # create python environment:
-   $ python3 -m venv .venv
+   # create python environment. I prefer conda
+   $ conda create -n threads python=3.12
 
    # activate python env:
-   $ . .venv/bin/activate
+   $ conda activate threads
 
    # install dependencies
    (.venv)$ python -m pip install -r requirements.txt
@@ -69,7 +69,7 @@ See it [in action](https://ayco.io/threads).
 
 4. After development session, deactivate the python env
    ```bash
-   (.venv)$ deactivate
+   (.venv)$ conda deactivate
    ```
 
 ## Deployment
