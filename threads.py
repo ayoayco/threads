@@ -159,9 +159,13 @@ def home():
 def tag(id):
     attribution = get_attribution()
     app = get_app_config()
-    statuses = get_account_tagged_statuses(id)
+    try:
+        statuses = get_account_tagged_statuses(id)
 
-    return render_template('_tag.html', threads=statuses, tag=id, app=app, attribution=attribution, render_date=datetime.now())
+        return render_template('_tag.html', threads=statuses, tag=id, app=app, attribution=attribution, render_date=datetime.now())
+    except ValueError as message:
+        return render_template('_error.html', app=app, attribution=attribution, render_date=datetime.now(), message=message)
+
 
 
 @threads.route('/thread/<path:id>')
@@ -169,15 +173,19 @@ def tag(id):
 def thread(id):
     attribution = get_attribution()
     app = get_app_config()
-    max_length = app.get('max_summary_length', 69)  # Configure max summary length
-    status = fetch_thread(id)
-    if status is not None:
-        status['summary'] = utils.clean_html(status['content']).strip()
-        if len(status['summary']) > max_length:
-            status['summary'] = status['summary'][:max_length] + '...'
-        return render_template('_home.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
-    else:
-        return redirect(url_for('threads.home'))
+    try:
+        max_length = app.get('max_summary_length', 69)  # Configure max summary length
+        status = fetch_thread(id)
+        if status is not None:
+            status['summary'] = utils.clean_html(status['content']).strip()
+            if len(status['summary']) > max_length:
+                status['summary'] = status['summary'][:max_length] + '...'
+            return render_template('_home.html', threads=[status], app=app, attribution=attribution, render_date=datetime.now())
+        else:
+            return redirect(url_for('threads.home'))
+    except ValueError as message:
+        return render_template('_error.html', app=app, attribution=attribution, render_date=datetime.now(), message=message)
+
 
 @threads.route('/api')
 @cache.cached(timeout=300)
