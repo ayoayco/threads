@@ -1,5 +1,5 @@
-. .venv/bin/activate
+conda activate threads
 flask --debug run
 
 # after run
-deactivate
+conda deactivate
