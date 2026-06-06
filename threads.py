@@ -48,6 +48,7 @@ def get_account_tagged_statuses(tag_name):
         statuses = [utils.clean_status(s) for s in statuses]
         return statuses
     else:
+        current_app.logger.error(f"get_account_tagged_statuses returned: {response.status_code}", url)
         return []
 
 def get_featured_tags():
@@ -59,6 +60,7 @@ def get_featured_tags():
         tags = response.json()
         return tags
     else:
+        current_app.logger.error(f"get_featured_tags returned: {response.status_code}", url)
         return []
 
 ### middleware
@@ -78,7 +80,8 @@ def get_status_url(ser, id):
 
 def fetch_statuses(ids):
     query_params = "&id[]=".join(ids)
-    response = requests.get(server() + '/api/v1/statuses?id[]=' + query_params )
+    url = server() + '/api/v1/statuses?id[]=' + query_params
+    response = requests.get(url)
     if response.status_code == 200:
         statuses = response.json()
 
@@ -88,22 +91,25 @@ def fetch_statuses(ids):
 
         return statuses
     else:
-        print(f"response status code: {response.status_code}")
+        current_app.logger.error(f"fetch_statuses returned: {response.status_code}", url)
         return []
 
 def fetch_thread(id):
-    response = requests.get(server() + '/api/v1/statuses/' + id )
+    url = server() + '/api/v1/statuses/' + id
+    response = requests.get(url)
     if response.status_code == 200:
         status = response.json()
         status = utils.clean_status(status)
         status['descendants'] = get_descendants(server(), status)
         return status
     else:
+        current_app.logger.error(f"fetch_thread returned: {response.status_code}", url)
         return None
 
 def get_descendants(server, status):
     author_id = status['account']['id']
-    response = requests.get(server + '/api/v1/statuses/' + status['id'] + '/context')
+    url = server + '/api/v1/statuses/' + status['id'] + '/context'
+    response = requests.get(url)
     if response.status_code == 200:
         context = response.json()
         descendants = []
@@ -114,6 +120,7 @@ def get_descendants(server, status):
                 descendants.append(utils.clean_status(reply))
         return descendants
     else:
+        current_app.logger.error(f"get_descendants returned: {response.status_code}", url)
         return []
 
 ### routes
