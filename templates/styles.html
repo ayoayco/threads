@@ -1,3 +1,6 @@
 <link rel="stylesheet" href="{{ url_for('threads.static', filename='pills.css') }}" />
 <link rel="stylesheet" href="{{ url_for('threads.static', filename='card.css') }}" />
 <link rel="stylesheet" href="{{ url_for('threads.static', filename='button.css') }}" />
+{% if manage %}
+<link rel="stylesheet" href="{{ url_for('threads.static', filename='admin.css') }}" />
+{% endif %}

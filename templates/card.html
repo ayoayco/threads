@@ -56,9 +56,18 @@
         {% endif %}
 
     </div>
-    {% if is_thread and not is_tag %}
+    {% if (is_thread and not is_tag) or manage %}
     <div class="bottom-menu">
+      {% if is_thread and not is_tag %}
       <a class="btn" href="{{ url_for('threads.thread', id=thread.id) }}">Read full thread &rarr;</a>
+      {% endif %}
+      {% if manage %}
+      <form class="unfeature-form" method="post" action="{{ url_for('threads.unfeature') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+        <input type="hidden" name="status" value="{{ thread.id }}" />
+        <button class="btn" type="submit">Unfeature</button>
+      </form>
+      {% endif %}
     </div>
     {% endif %}
 </article>

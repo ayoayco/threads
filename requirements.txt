@@ -3,3 +3,4 @@ requests
 markdown
 Flask-Caching
 aiohttp
+click

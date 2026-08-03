@@ -158,6 +158,9 @@
 
   </header>
   <main class={{ "thread" if threads|length==1 else "home" }}>
+    {% if manage %}
+    {% include "admin-bar.html" %}
+    {% endif %}
     {% if tags is defined%}
     {% with tags=tags %}
     {% include "tag-pills.html" %}
@@ -167,12 +170,12 @@
       <a class="btn" href="{{url_for('threads.home')}}">&larr; Back</a>
     </div>
     {% for thread in threads %}
-    {% with thread=thread, parent_id=thread.id, is_thread=threads|length > 1, server=app.server %}
+    {% with thread=thread, parent_id=thread.id, is_thread=threads|length > 1, server=app.server, manage=manage %}
     {% include "card.html" %}
     {% endwith %}
     {% if thread.descendants is defined %}
     {% for descendant in thread.descendants %}
-    {% with thread=descendant, parent_id=thread.id, server=app.server %}
+    {% with thread=descendant, parent_id=thread.id, server=app.server, manage=false %}
     {% include "card.html" %}
     {% endwith %}
     {% endfor %}

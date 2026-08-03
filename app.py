@@ -1,13 +1,11 @@
 import os
 from flask import Flask
 import json
-from .threads import threads
-from .cache import cache
+from . import init_app
 
 app = Flask(__name__)
-cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
-app.register_blueprint(threads, url_prefix='/')
 app.config.from_file("config.json", load=json.load)
+init_app(app, url_prefix='/')
 
 ## WATCH TEMPLATE FILES
 template_files = os.listdir("./templates")

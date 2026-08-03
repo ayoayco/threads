@@ -1,5 +1,15 @@
 import markdown
 import re
+from datetime import datetime
+
+from flask import render_template
+
+from .config import get_app_config, get_attribution
+
+def render_error(message):
+    return render_template('_error.html', threads=[], app=get_app_config(),
+                           attribution=get_attribution(),
+                           render_date=datetime.now(), message=message)
 
 def clean_status(status):
     clean = clean_dict(status, ['id', 'content', 'created_at', 'url', 'media_attachments', 'card', 'tags'])

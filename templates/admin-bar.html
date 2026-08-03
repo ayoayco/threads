@@ -1,0 +1,16 @@
+<div class="admin-bar">
+    <form class="feature-form" method="post" action="{{ url_for('threads.feature') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+        <label class="visually-hidden" for="status">Status id or post URL</label>
+        <input id="status" name="status" type="text" required
+            placeholder="Status id or post URL" />
+        <button class="btn" type="submit">Feature</button>
+    </form>
+    <small>
+        Signed in as {{ user.display_name }} &middot;
+        <a href="{{ url_for('auth.logout') }}">Sign out</a>
+    </small>
+    {% if notice %}
+    <p class="admin-notice">{{ notice }}</p>
+    {% endif %}
+</div>

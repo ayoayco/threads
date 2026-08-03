@@ -1,41 +1,14 @@
-from flask import Blueprint, render_template, current_app, redirect, url_for
+from flask import Blueprint, render_template, current_app, redirect, request, url_for
 import requests
 from datetime import datetime
 from .cache import cache
-from . import utils
+from . import featured, utils
+from .auth import admin_required, check_csrf, csrf_token, is_admin
+from .config import get_app_config, get_attribution, get_user_id, server
 
 threads = Blueprint('threads', __name__, template_folder='templates', static_folder='static')
 
-thread_ids = [
-    '116667802375475365',
-    '116458548126648062',
-    '116441682011075462',
-    '116381905038904377',
-    '116364343818471960',
-    '116352859731078602',
-    '116312536977108702',
-    '116245553803866191',
-    '114649657564007543',
-    '114490408596372783',
-    '114012659479108663',
-    '113650907203476875',
-    '113449531956042438',
-]
-
 ###########################################################
-
-### config
-def server():
-    return current_app.config['APPS']['threads']['server']
-
-def get_attribution():
-    return current_app.config['ATTRIBUTION']
-
-def get_app_config():
-    return current_app.config['APPS']['threads']
-
-def get_user_id():
-    return current_app.config['APPS']['threads']['user_id']
 
 ### featured tags
 def get_account_tagged_statuses(tag_name):
@@ -81,17 +54,18 @@ def get_status_url(ser, id):
     return f'{ser}/api/v1/statuses/{id}'
 
 def fetch_statuses(ids):
+    if not ids:
+        return []
     query_params = "&id[]=".join(ids)
     url = server() + '/api/v1/statuses?id[]=' + query_params
     response = requests.get(url)
     if response.status_code == 200:
         statuses = response.json()
 
-        # When you need to check for missing statuses:
-        # missing_ids = [s for s in thread_ids if not any(s in d.values() for d in statuses)]
-        # print(f"missing: {missing_ids}")
-
-        return statuses
+        # the API makes no promise about ordering, and a status deleted since it
+        # was featured simply comes back missing
+        found = {str(s['id']): s for s in statuses}
+        return [found[id] for id in ids if id in found]
     else:
         message=f"fetch_statuses returned: {response.status_code} for {url}"
         current_app.logger.error(message)
@@ -129,13 +103,16 @@ def get_descendants(server, status):
         raise ValueError(message)
 
 ### routes
+# the cache is shared by every visitor, so a signed-in curator never reads from
+# it -- otherwise the management controls would be served to the public
 @threads.route('/')
-@cache.cached(timeout=300)
+@cache.cached(timeout=300, unless=is_admin)
 def home():
     app = get_app_config()
     attribution = get_attribution()
+    admin = is_admin()
     try:
-        statuses = fetch_statuses(thread_ids)
+        statuses = fetch_statuses(featured.list_ids())
         statuses = [utils.clean_status(s) for s in statuses]
         tags = []
 
@@ -148,14 +125,17 @@ def home():
         else:
             statuses = [s for s in statuses if s]  # keep only truthy statuses
 
-        return render_template('_home.html', threads=statuses, tags=tags, app=app, attribution=attribution, render_date=datetime.now())
+        return render_template('_home.html', threads=statuses, tags=tags, app=app,
+                               attribution=attribution, render_date=datetime.now(),
+                               manage=admin, csrf_token=csrf_token() if admin else None,
+                               notice=request.args.get('notice') if admin else None)
     except ValueError as message:
         return render_template('_error.html', app=app, attribution=attribution, render_date=datetime.now(), message=message)
 
 
 
 @threads.route('/tag/<path:id>')
-@cache.cached(timeout=300)
+@cache.cached(timeout=300, unless=is_admin)
 def tag(id):
     attribution = get_attribution()
     app = get_app_config()
@@ -169,7 +149,7 @@ def tag(id):
 
 
 @threads.route('/thread/<path:id>')
-@cache.cached(timeout=300)
+@cache.cached(timeout=300, unless=is_admin)
 def thread(id):
     attribution = get_attribution()
     app = get_app_config()
@@ -190,9 +170,37 @@ def thread(id):
 @threads.route('/api')
 @cache.cached(timeout=300)
 def api():
-    return fetch_statuses(thread_ids);
+    return fetch_statuses(featured.list_ids());
 
 @threads.route('/api/<path:id>')
 @cache.cached(timeout=300)
 def api_thread(id):
     return fetch_thread(id)
+
+### curating the featured list, as the account the site is built from
+@threads.route('/featured', methods=['POST'])
+@admin_required
+def feature():
+    check_csrf()
+    status_id = featured.parse_status_id(request.form.get('status'))
+    if status_id is None:
+        return redirect(url_for('threads.home', notice='Not a status id or post URL'))
+    featured.add(status_id, host=server())
+    cache.clear()
+    return redirect(url_for('threads.home', notice=f'Featured {status_id}'))
+
+@threads.route('/featured/remove', methods=['POST'])
+@admin_required
+def unfeature():
+    check_csrf()
+    status_id = featured.parse_status_id(request.form.get('status'))
+    if status_id is None:
+        return redirect(url_for('threads.home', notice='Not a status id or post URL'))
+    featured.remove(status_id)
+    cache.clear()
+    return redirect(url_for('threads.home', notice=f'Removed {status_id}'))
+
+@threads.app_errorhandler(400)
+@threads.app_errorhandler(403)
+def handle_refusal(error):
+    return utils.render_error(error.description), error.code

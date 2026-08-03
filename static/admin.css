@@ -1,0 +1,42 @@
+.admin-bar {
+  border: 1px dashed var(--color-brand-complement, #7d93cf);
+  border-radius: 5px;
+  padding: 0.75em 1em;
+  display: grid;
+  gap: 0.5em;
+}
+
+.admin-bar .feature-form {
+  display: flex;
+  gap: 0.5em;
+  flex-wrap: wrap;
+}
+
+.admin-bar input[type="text"] {
+  flex: 1 1 12em;
+  font: inherit;
+  font-size: var(--font-size-sm);
+  padding: 0.4em 0.6em;
+  border: 1px solid rgba(125, 147, 207, 0.5);
+  border-radius: 5px;
+  background: transparent;
+  color: inherit;
+}
+
+.admin-bar .admin-notice {
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.unfeature-form {
+  display: inline;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
