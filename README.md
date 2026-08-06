@@ -13,6 +13,7 @@ How it works:
 3. clean HTML with some styling will be sent to the viewer's browser
 4. bit of client-side JS for progressive enhancement:
    1. `<relative-time>` by GitHub: https://github.com/github/relative-time-element
+   2. `<mastodon-content>`: https://www.npmjs.com/package/@ayo-run/mastodon-content -- rewrites hashtag links to point at this app's own tag pages, and styles a trailing hashtag-only line as a row of pills
 5. self-hostable with the app configuration in `config.json` file -- we are working on a docker way and easy configuration
 
 See it [in action](https://ayco.io/threads).
@@ -66,7 +67,15 @@ See it [in action](https://ayco.io/threads).
    # rejoice!
    ```
 
-3. To start development, run the following:
+3. Install the browser-side dependencies
+
+   ```bash
+   $ pnpm install
+   ```
+
+   > There is no bundler here: the custom elements are installed from npm and served straight out of `node_modules` by the `/vendor/` route, with `templates/import-map.html` pointing each bare specifier at it. So `node_modules` has to be present wherever the app runs, deployments included -- `pnpm install --prod` is enough there.
+
+4. To start development, run the following:
 
    ```bash
    (.venv)$ flask --debug run
@@ -74,7 +83,7 @@ See it [in action](https://ayco.io/threads).
 
    > Note: On a Mac, the default port 5000 is used by AirDrop & Handoff; you may have to turn those off
 
-4. After development session, deactivate the python env
+5. After development session, deactivate the python env
    ```bash
    (.venv)$ conda deactivate
    ```

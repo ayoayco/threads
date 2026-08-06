@@ -1,7 +1,9 @@
 <script type="importmap">
 {
   "imports": {
-    "web-component-base": "https://esm.sh/web-component-base@2.1.2/es2022/web-component-base.mjs"
+    "@ayo-run/mastodon-content": "{{ url_for('threads.vendor', filename='mastodon-content.js') }}",
+    "@github/relative-time-element": "{{ url_for('threads.vendor', filename='relative-time-element.js') }}",
+    "web-component-base": "{{ url_for('threads.vendor', filename='web-component-base.js') }}"
   }
 }
 </script>

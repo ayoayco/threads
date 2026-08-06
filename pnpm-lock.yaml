@@ -7,6 +7,16 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@ayo-run/mastodon-content':
+        specifier: ^1.0.0
+        version: 1.0.0(web-component-base@6.1.6)
+      '@github/relative-time-element':
+        specifier: ^5.3.1
+        version: 5.3.1
+      web-component-base:
+        specifier: ^6.1.6
+        version: 6.1.6
     devDependencies:
       husky:
         specifier: ^9.1.7
@@ -14,11 +24,30 @@ importers:
 
 packages:
 
+  '@ayo-run/mastodon-content@1.0.0':
+    resolution: {integrity: sha512-9vJYi6CrubVO4t0ALxQIdnSIalaYBVEVjSJH15DWQMeUdXWJx87OD3Cpt0uStd2jmoWnysey0UxqgDSz8N2FfA==}
+    peerDependencies:
+      web-component-base: ^6.1.5
+
+  '@github/relative-time-element@5.3.1':
+    resolution: {integrity: sha512-f++QCIXxGH7rMbpTASRfLyCyPydd4HqwOmATBb/sAUCq72HEZN0MX9znmJSp7NKYxuQxF8j0Mv3ez9P32c70vw==}
+
   husky@9.1.7:
     resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
     engines: {node: '>=18'}
     hasBin: true
 
+  web-component-base@6.1.6:
+    resolution: {integrity: sha512-WgfcwfRgp365ZfmyUYzoAxmbouUfAyArztMrgzfWuEJm6Ty9SdvOLAzciuWgS8pHn9lShWkcSsnVErNeT1z7Yg==}
+
 snapshots:
 
+  '@ayo-run/mastodon-content@1.0.0(web-component-base@6.1.6)':
+    dependencies:
+      web-component-base: 6.1.6
+
+  '@github/relative-time-element@5.3.1': {}
+
   husky@9.1.7: {}
+
+  web-component-base@6.1.6: {}

@@ -186,12 +186,7 @@
     <p>Rendered on {{ render_date }} in Europe/Amsterdam :)</p>
   </footer>
 
-  <script defer type="module">
-    import TimeAgo from "https://esm.sh/v135/@github/relative-time-element@4.4.0/es2022/relative-time.js"
-    customElements.define('relative-time', TimeAgo)
-  </script>
-  <script defer type="module" src="{{ url_for('threads.static', filename='enhance-content.js') }}">
-  </script>
+  <!-- no statuses are rendered here, so there is nothing to enhance -->
 </body>
 
 </html>

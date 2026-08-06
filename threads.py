@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, current_app, redirect, request, url_for
+from flask import Blueprint, abort, render_template, current_app, redirect, request, send_from_directory, url_for
 import requests
+import os
 from datetime import datetime
 from .cache import cache
 from . import featured, utils
@@ -176,6 +177,27 @@ def api():
 @cache.cached(timeout=300)
 def api_thread(id):
     return fetch_thread(id)
+
+### browser modules installed from npm
+# there is no bundler in this project, so the browser is served the installed
+# files as they are; templates/import-map.html maps each bare specifier here.
+# Only the modules listed below are reachable -- not the rest of node_modules.
+node_modules = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'node_modules')
+
+vendored_modules = {
+    'mastodon-content.js': '@ayo-run/mastodon-content/dist/mastodon-content.js',
+    'web-component-base.js': 'web-component-base/dist/index.js',
+    # the bundled build: index.js pulls in siblings by relative path, which
+    # would need a route per file; bundle.js is the same code in one file
+    'relative-time-element.js': '@github/relative-time-element/dist/bundle.js',
+}
+
+@threads.route('/vendor/<path:filename>')
+def vendor(filename):
+    path = vendored_modules.get(filename)
+    if path is None:
+        abort(404)
+    return send_from_directory(node_modules, path)
 
 ### curating the featured list, as the account the site is built from
 @threads.route('/featured', methods=['POST'])
