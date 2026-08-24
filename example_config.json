@@ -14,5 +14,9 @@
   "ATTRIBUTION": {
     "owner": "Author Name",
     "year": "2024"
+  },
+  "CLOUDFLARE": {
+    "zone_id": "",
+    "api_token": ""
   }
 }

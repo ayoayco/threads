@@ -3,7 +3,7 @@ import requests
 import os
 from datetime import datetime
 from .cache import cache
-from . import featured, utils
+from . import cdn, featured, utils
 from .auth import admin_required, check_csrf, csrf_token, is_admin
 from .config import get_app_config, get_attribution, get_user_id, server
 
@@ -209,6 +209,7 @@ def feature():
         return redirect(url_for('threads.home', notice='Not a status id or post URL'))
     featured.add(status_id, host=server())
     cache.clear()
+    cdn.purge()
     return redirect(url_for('threads.home', notice=f'Featured {status_id}'))
 
 @threads.route('/featured/remove', methods=['POST'])
@@ -220,6 +221,7 @@ def unfeature():
         return redirect(url_for('threads.home', notice='Not a status id or post URL'))
     featured.remove(status_id)
     cache.clear()
+    cdn.purge()
     return redirect(url_for('threads.home', notice=f'Removed {status_id}'))
 
 @threads.app_errorhandler(400)

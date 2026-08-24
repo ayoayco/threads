@@ -152,9 +152,38 @@ The curated list is a file on disk, so keep `instance/` out of the deploy
 directory that gets replaced on release -- mount it as a volume in Docker -- or
 the featured posts go away with the old release.
 
-Rendered pages are cached in memory for five minutes, per worker. Curating
-clears the cache in the worker that handled the change, so with `gunicorn -w 4`
-a change can take up to five minutes to show up for everyone.
+Rendered pages are cached for five minutes. The cache lives on disk under
+`instance/` (`FileSystemCache`), so every `gunicorn` worker on the host shares
+it and curating clears it for all of them at once -- persist `instance/` across
+releases (above) and the cache comes with it.
+
+### Behind a CDN
+
+A CDN (Cloudflare, say) keeps its own copy of the public pages at the edge, and
+two things keep the curator's view and the public's view from bleeding into each
+other through it:
+
+- **Responses carry cache headers.** A signed-in curator's page is
+  `private, no-store`; a public page is `public, max-age=0, s-maxage=300`, so a
+  shared cache may serve it for five minutes while the browser revalidates. The
+  edge still keys a page on its URL alone, so add a rule to **bypass the cache
+  for any request carrying the session cookie** (on Cloudflare: a Cache Rule,
+  _Cookie contains `session=`_ -> Bypass cache). Without it the edge serves the
+  anonymous page back to the curator right after they sign in.
+- **Curating purges the edge.** Featuring or unfeaturing clears the server-side
+  cache at once, but the edge would still serve its stale copy until `s-maxage`
+  lapses. Set a `CLOUDFLARE` block in `config.json` -- `zone_id` and an API
+  token scoped to _Zone -> Cache Purge_ only -- and each change purges the zone
+  so the public sees it right away:
+
+  ```json
+  "CLOUDFLARE": { "zone_id": "…", "api_token": "…" }
+  ```
+
+  It is optional: leave the block out (or its fields blank) and nothing is
+  purged -- a change then waits out the five-minute edge TTL. A purge that fails
+  is logged and ignored, so the CDN being briefly unreachable never breaks
+  curation.
 
 ### Moving an existing deployment to the database
 

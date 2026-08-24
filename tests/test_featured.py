@@ -11,6 +11,8 @@ import unittest
 from unittest import mock
 from urllib.parse import parse_qs, urlparse
 
+import requests
+
 # import `threads` as a package, not as the threads.py module in this directory
 sys.path.insert(0, os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
@@ -369,6 +371,60 @@ class CurationTest(ThreadsTestCase):
                 session.clear()
             self.assertNotIn('116667802375475365',
                              self.client.get('/').get_data(as_text=True))
+
+### purging the CDN edge after curation
+class CdnPurgeTest(ThreadsTestCase):
+    def setUp(self):
+        super().setUp()
+        self.app.config['CLOUDFLARE'] = {'zone_id': 'zone-1', 'api_token': 'tok-1'}
+
+    def post(self, path, **form):
+        form.setdefault('csrf_token', 'test-token')
+        return self.client.post(path, data=form)
+
+    def test_featuring_purges_the_configured_zone(self):
+        self.sign_in()
+        with mock.patch('threads.cdn.requests.post',
+                        return_value=Response({'success': True})) as purge:
+            self.post('/featured', status='123')
+        purge.assert_called_once()
+        self.assertEqual(
+            purge.call_args.args[0],
+            'https://api.cloudflare.com/client/v4/zones/zone-1/purge_cache')
+        self.assertEqual(purge.call_args.kwargs['json'], {'purge_everything': True})
+        self.assertEqual(purge.call_args.kwargs['headers']['Authorization'],
+                         'Bearer tok-1')
+
+    def test_unfeaturing_purges_the_configured_zone(self):
+        self.sign_in()
+        with mock.patch('threads.cdn.requests.post',
+                        return_value=Response({'success': True})) as purge:
+            self.post('/featured/remove', status='116667802375475365')
+        purge.assert_called_once()
+
+    def test_without_config_nothing_is_purged(self):
+        del self.app.config['CLOUDFLARE']
+        self.sign_in()
+        with mock.patch('threads.cdn.requests.post') as purge:
+            self.post('/featured', status='123')
+        purge.assert_not_called()
+
+    def test_a_blank_token_purges_nothing(self):
+        self.app.config['CLOUDFLARE'] = {'zone_id': 'zone-1', 'api_token': ''}
+        self.sign_in()
+        with mock.patch('threads.cdn.requests.post') as purge:
+            self.post('/featured', status='123')
+        purge.assert_not_called()
+
+    def test_a_purge_failure_does_not_break_curation(self):
+        self.sign_in()
+        with mock.patch('threads.cdn.requests.post',
+                        side_effect=requests.ConnectionError('boom')):
+            response = self.post('/featured', status='123')
+        # the change still landed; the edge just waits out its own TTL
+        self.assertEqual(response.status_code, 302)
+        with self.app.app_context():
+            self.assertTrue(featured.is_featured('123'))
 
 ### signing in
 class LoginTest(ThreadsTestCase):
