@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 
 def init_app(app, url_prefix='/'):
@@ -15,7 +16,13 @@ def init_app(app, url_prefix='/'):
 
     app.config.setdefault('SESSION_COOKIE_SAMESITE', 'Lax')
     app.config.setdefault('PERMANENT_SESSION_LIFETIME', timedelta(days=14))
-    app.config.setdefault('CACHE_TYPE', 'SimpleCache')
+    # A shared, on-disk cache rather than SimpleCache: production runs several
+    # gunicorn workers, and an in-process cache lives in just one of them, so a
+    # `cache.clear()` after curating (threads.feature/unfeature) would clear a
+    # single worker and leave the others serving the stale featured list for up
+    # to five minutes. A filesystem cache is shared by every worker on the host.
+    app.config.setdefault('CACHE_TYPE', 'FileSystemCache')
+    app.config.setdefault('CACHE_DIR', os.path.join(app.instance_path, 'cache'))
     cache.init_app(app)
     db.init_app(app)
     app.register_blueprint(threads, url_prefix=url_prefix)

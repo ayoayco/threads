@@ -274,6 +274,35 @@ class HomeTest(ThreadsTestCase):
         with mock.patch('threads.threads.requests.get', only_tags):
             self.assertEqual(self.client.get('/').status_code, 200)
 
+### cache headers across the auth boundary
+class CachingHeadersTest(ThreadsTestCase):
+    def test_a_public_page_is_shared_cacheable_but_the_browser_revalidates(self):
+        with mock.patch('threads.threads.requests.get', fake_get()):
+            response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers['Cache-Control'],
+                         'public, max-age=0, s-maxage=300')
+
+    def test_a_curators_page_is_never_stored_by_any_cache(self):
+        self.sign_in()
+        with mock.patch('threads.threads.requests.get', fake_get()):
+            response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers['Cache-Control'], 'private, no-store')
+
+    def test_signing_out_is_never_cached(self):
+        # the logout redirect rewrites the session cookie; nothing between here
+        # and the browser may replay it to the next visitor
+        self.sign_in()
+        response = self.client.get('/logout')
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('no-store', response.headers['Cache-Control'])
+
+    def test_errors_are_not_cached(self):
+        response = self.client.get('/does-not-exist')
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.headers['Cache-Control'], 'no-store')
+
 ### the OAuth gate
 class CurationTest(ThreadsTestCase):
     def post(self, path, **form):

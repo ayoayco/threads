@@ -35,6 +35,42 @@ def is_admin():
 def inject_user():
     return {'user': current_user()}
 
+### cache policy
+@auth.after_app_request
+def keep_private_pages_out_of_shared_caches(response):
+    """Hold the auth boundary against every cache between here and the browser.
+
+    The site is curated by a single signed-in account; everyone else is
+    anonymous. Without explicit headers a shared cache -- a CDN, a reverse
+    proxy -- keys a page on its URL alone and happily serves the anonymous copy
+    of `/` back to the curator right after they sign in, so the login looks like
+    it silently failed. Three rules keep the two audiences from bleeding into
+    each other through a cache:
+
+      * A curator's page is `private, no-store`: no shared cache and no browser
+        may keep it, so their management view never reaches anyone else. A
+        curator is recognised from the session during the request, before Flask
+        writes the session cookie, so this catches the signed-in case; a
+        response that sets a cookie of its own is held to the same rule.
+      * A public page stays cacheable by a shared cache for five minutes
+        (`s-maxage`, matching the server-side view cache) but the browser is
+        told to revalidate (`max-age=0`), so the instant the curator signs in
+        their browser fetches the authenticated page instead of replaying the
+        anonymous copy it cached moments earlier.
+      * Anything else (errors, redirects) is `no-store`.
+
+    A CDN also has to be told to vary on the session cookie -- see the deploy
+    notes; a shared cache that ignores these headers still needs a rule to skip
+    the edge for a request that carries the cookie.
+    """
+    if current_user() is not None or response.headers.get('Set-Cookie'):
+        response.headers['Cache-Control'] = 'private, no-store'
+    elif response.status_code == 200:
+        response.headers.setdefault('Cache-Control', 'public, max-age=0, s-maxage=300')
+    else:
+        response.headers.setdefault('Cache-Control', 'no-store')
+    return response
+
 def admin_required(view):
     @functools.wraps(view)
     def wrapped(*args, **kwargs):
