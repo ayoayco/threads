@@ -104,7 +104,13 @@ hand -- the credentials it gets back are kept in the database.
 
 Once signed in, the home page grows a small form -- paste a status id or the URL
 of a post to feature it -- and each post gets an "Unfeature" button. Visitors
-see none of that. Newly featured posts are listed first.
+see none of that.
+
+The list is in the posts' own order, newest first, whenever each one was
+featured -- so featuring a post from long ago slots it in down the page rather
+than on top. `flask --app app.py list-featured` prints the list in that order,
+with the date of each post, which is a quick way to check a deployment's
+database from the host.
 
 Two things this needs to work:
 

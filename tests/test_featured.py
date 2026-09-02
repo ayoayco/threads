@@ -90,6 +90,7 @@ class ThreadsTestCase(unittest.TestCase):
         )
         cache.init_app(self.app, config={'CACHE_TYPE': 'SimpleCache'})
         db.init_app(self.app)
+        featured.init_app(self.app)
         self.app.register_blueprint(threads_blueprint, url_prefix='/')
         self.app.register_blueprint(auth, url_prefix='/')
         with self.app.app_context():
@@ -117,9 +118,43 @@ class FeaturedStoreTest(ThreadsTestCase):
         with self.app.app_context():
             featured.add('123', host='https://social.example')
             self.assertTrue(featured.is_featured('123'))
-            self.assertEqual(featured.list_ids()[0], '123')  # newest first
+            self.assertIn('123', featured.list_ids())
             featured.remove('123')
             self.assertFalse(featured.is_featured('123'))
+
+    def test_listed_in_post_order_however_late_it_was_featured(self):
+        # a status id is a snowflake: bigger means posted later
+        with self.app.app_context():
+            featured.add('113000000000000000')   # older than any seeded post
+            self.assertEqual(featured.list_ids()[-1], '113000000000000000')
+            featured.add('116700000000000000')   # newer than any seeded post
+            self.assertEqual(featured.list_ids()[0], '116700000000000000')
+            featured.add('114000000000000000')   # between two seeded posts
+            ids = featured.list_ids()
+            self.assertEqual(ids, sorted(ids, key=int, reverse=True))
+
+    def test_ordered_as_numbers_not_as_text(self):
+        # "123" > "116..." as text; as a date it is 1970, so it goes last
+        with self.app.app_context():
+            featured.add('123')
+            self.assertEqual(featured.list_ids()[-1], '123')
+
+    def test_posted_at_decodes_the_snowflake(self):
+        posted = featured.posted_at('113449531956042438')
+        self.assertEqual(posted.strftime('%Y-%m-%d'), '2024-11-08')
+        self.assertLess(featured.posted_at('113449531956042438'),
+                        featured.posted_at('116667802375475365'))
+
+    def test_list_featured_command_prints_the_listing_order_with_dates(self):
+        with self.app.app_context():
+            featured.add('113000000000000000')
+        result = self.app.test_cli_runner().invoke(args=['list-featured'])
+        self.assertEqual(result.exit_code, 0, result.output)
+        lines = result.output.strip().splitlines()
+        self.assertEqual(len(lines), 14)
+        self.assertTrue(lines[0].endswith('116667802375475365'), lines[0])
+        self.assertTrue(lines[-1].endswith('113000000000000000'), lines[-1])
+        self.assertRegex(lines[0], r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}  ')
 
     def test_featuring_twice_is_harmless(self):
         with self.app.app_context():
@@ -259,7 +294,7 @@ class HomeTest(ThreadsTestCase):
         self.assertIn('116458548126648062', body)
         self.assertNotIn('116667802375475365', body)
 
-    def test_statuses_are_rendered_in_database_order(self):
+    def test_statuses_are_rendered_newest_post_first(self):
         with mock.patch('threads.threads.requests.get', fake_get()):
             body = self.client.get('/').get_data(as_text=True)
         newest = body.index('116667802375475365')

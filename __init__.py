@@ -12,7 +12,7 @@ def init_app(app, url_prefix='/'):
     from .auth import auth
     from .cache import cache
     from .threads import threads
-    from . import db
+    from . import db, featured
 
     app.config.setdefault('SESSION_COOKIE_SAMESITE', 'Lax')
     app.config.setdefault('PERMANENT_SESSION_LIFETIME', timedelta(days=14))
@@ -25,6 +25,7 @@ def init_app(app, url_prefix='/'):
     app.config.setdefault('CACHE_DIR', os.path.join(app.instance_path, 'cache'))
     cache.init_app(app)
     db.init_app(app)
+    featured.init_app(app)
     app.register_blueprint(threads, url_prefix=url_prefix)
     app.register_blueprint(auth, url_prefix=url_prefix)
     return app

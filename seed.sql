@@ -1,6 +1,6 @@
 -- The featured posts that used to live in `thread_ids` in threads.py.
 -- Applied by `flask --app app.py init-db`; ignored if already present.
--- Oldest first, so the default listing order matches what the site showed before.
+-- The site lists posts by their own date, so the order here does not matter.
 INSERT OR IGNORE INTO statuses (status_id) VALUES
     ('113449531956042438'),
     ('113650907203476875'),
