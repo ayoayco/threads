@@ -220,6 +220,8 @@ class BlueprintTest(unittest.TestCase):
         self.host.config.update(
             SECRET_KEY='test-secret',
             DATABASE=self.db_path,
+            # keeps init_app from creating the on-disk cache during the tests
+            CACHE_TYPE='NullCache',
             TESTING=True,
             APPS={'threads': {
                 'site_name': 'Thoughts',
@@ -232,6 +234,19 @@ class BlueprintTest(unittest.TestCase):
             ATTRIBUTION={'owner': 'Owner', 'year': '2024'},
         )
         threads_package.init_app(self.host, url_prefix='/threads')
+
+    def test_the_cache_lives_beside_the_database_not_in_flasks_instance_path(self):
+        package = os.path.dirname(os.path.abspath(threads_package.__file__))
+        self.assertEqual(self.host.config['CACHE_DIR'],
+                         os.path.join(package, 'instance', 'cache'))
+        # and not anywhere near the host application
+        self.assertFalse(self.host.config['CACHE_DIR'].startswith(self.elsewhere))
+
+    def test_a_host_may_still_put_the_cache_elsewhere(self):
+        host = Flask('host', root_path=self.elsewhere)
+        host.config.update(self.host.config, CACHE_DIR=self.elsewhere)
+        threads_package.init_app(host, url_prefix='/threads')
+        self.assertEqual(host.config['CACHE_DIR'], self.elsewhere)
 
     def tearDown(self):
         for name in os.listdir(self.elsewhere):

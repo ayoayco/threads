@@ -22,7 +22,10 @@ def init_app(app, url_prefix='/'):
     # single worker and leave the others serving the stale featured list for up
     # to five minutes. A filesystem cache is shared by every worker on the host.
     app.config.setdefault('CACHE_TYPE', 'FileSystemCache')
-    app.config.setdefault('CACHE_DIR', os.path.join(app.instance_path, 'cache'))
+    # beside the database, in this package's own instance/ -- not Flask's
+    # instance_path, which for a package is one level *up* from it (and the
+    # host site's, once threads is a blueprint), where nothing looks for it
+    app.config.setdefault('CACHE_DIR', os.path.join(db.HERE, 'instance', 'cache'))
     cache.init_app(app)
     db.init_app(app)
     featured.init_app(app)

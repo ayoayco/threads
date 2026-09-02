@@ -140,8 +140,9 @@ That registers both blueprints, sets up the cache and the database, and adds the
 host has already set is left alone; what it has to provide is `SECRET_KEY`,
 `APPS.threads` and `ATTRIBUTION`, same as `example_config.json` here.
 
-The database and the SQL files stay inside this directory whatever the host is,
-so `instance/threads.sqlite` is `threads/instance/threads.sqlite` there. The
+The database, the cache and the SQL files stay inside this directory whatever
+the host is, so `instance/threads.sqlite` is `threads/instance/threads.sqlite`
+there, and the cache is `threads/instance/cache` (set `CACHE_DIR` to move it). The
 redirect URI picks up the prefix: `<your site>/threads/oauth/callback`.
 
 ## Tests
@@ -158,10 +159,11 @@ The curated list is a file on disk, so keep `instance/` out of the deploy
 directory that gets replaced on release -- mount it as a volume in Docker -- or
 the featured posts go away with the old release.
 
-Rendered pages are cached for five minutes. The cache lives on disk under
-`instance/` (`FileSystemCache`), so every `gunicorn` worker on the host shares
-it and curating clears it for all of them at once -- persist `instance/` across
-releases (above) and the cache comes with it.
+Rendered pages are cached for five minutes. The cache lives on disk at
+`instance/cache`, beside the database (`FileSystemCache`), so every `gunicorn`
+worker on the host shares it and curating clears it for all of them at once --
+persist `instance/` across releases (above) and the cache comes with it. To
+drop it by hand, delete that directory and restart; the app recreates it.
 
 ### Behind a CDN
 
